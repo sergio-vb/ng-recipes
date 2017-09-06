@@ -1,0 +1,12 @@
+.add-recipe{
+    margin-bottom: 1em;
+}
+.list-group-item{
+    cursor: pointer
+}
+.list-group-item:hover{
+	background-color: #ccc;
+}
+.img-responsive{
+    max-height:50px;
+}
