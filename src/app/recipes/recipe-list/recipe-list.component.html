@@ -4,23 +4,13 @@
     </div>
 </div>
 <div class="row">
-    <ul class="col-xs-12 list-group">
+    <ul class="col-xs-12">
         <li 
-            *ngFor="let recipe of recipes" 
-            class="list-group-item clearfix"
-        >
-            <div class="pull-left">
-                <h4 class="list-group-item-heading">{{recipe.name}}</h4>
-                <p class="list-group-item-text">{{recipe.description}}</p>
-            </div>
-            <span class="pull-right">
-                <img 
-                    [src]="recipe.imagePath" 
-                    alt="{{recipe.name}}" 
-                    class="img-responsive"
-                >
-            </span>
-        </li>
-        <!--<app-recipe-item></app-recipe-item>-->
+            app-recipe-item 
+            *ngFor="let recipeElement of recipes" 
+            [recipe]="recipeElement"
+            class="list-group-item"
+            (recipeSelected)="onRecipeSelected($event)"
+        ></li>
     </ul>
 </div>
