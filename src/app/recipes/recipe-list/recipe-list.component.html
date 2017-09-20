@@ -10,7 +10,7 @@
             *ngFor="let recipeElement of recipes" 
             [recipe]="recipeElement"
             class="list-group-item"
-            (recipeSelected)="onRecipeSelected($event)"
+            (recipeSelected)="onRecipeSelected(recipeElement)"
         ></li>
     </ul>
 </div>

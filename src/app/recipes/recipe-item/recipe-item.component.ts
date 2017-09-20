@@ -9,7 +9,7 @@ import  { Recipe } from '../recipe.model';
 })
 export class RecipeItemComponent implements OnInit {
 
-  @Output() recipeSelected = new EventEmitter<{recipe:Recipe}>();
+  @Output() recipeSelected = new EventEmitter<void>();
   @Input() recipe:Recipe;
 
   constructor() { }
@@ -19,7 +19,7 @@ export class RecipeItemComponent implements OnInit {
 
   onItemClick(){
     console.log("Item clicked.");
-    this.recipeSelected.emit({recipe: this.recipe});
+    this.recipeSelected.emit();
   }
 
 }
