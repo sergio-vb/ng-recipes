@@ -1,0 +1,6 @@
+.container {
+  background: rgba(255, 255, 255, 0.78);
+  /* background: rgba(14, 4, 4, 0.7); */
+  border-radius: 9px;
+  padding: 3em 1.6em;
+}

@@ -1,16 +1,10 @@
 <div class="row">
     <div class="col-xs-12">
-        <button class="btn btn-sucess add-recipe">Add New Recipe</button>
+        <button class="btn btn-primary add-recipe">Add New Recipe</button>
     </div>
 </div>
 <div class="row">
     <ul class="col-xs-12">
-        <li 
-            app-recipe-item 
-            *ngFor="let recipeElement of recipes" 
-            [recipe]="recipeElement"
-            class="list-group-item"
-            (recipeSelected)="onRecipeSelected(recipeElement)"
-        ></li>
+        <li app-recipe-item *ngFor="let recipeElement of recipes" [recipe]="recipeElement" class="list-group-item" (recipeSelected)="onRecipeSelected(recipeElement)"></li>
     </ul>
 </div>

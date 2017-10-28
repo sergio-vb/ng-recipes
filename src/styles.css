@@ -1,1 +1,21 @@
 /* You can add global styles to this file, and also import other style files */
+
+body {
+  /* background: #b5decc; */
+  background: url(./assets/images/banner-bg.jpg) no-repeat center top;
+  background-size: cover;
+  min-height: 630px;
+  font-family: 'Open Sans', sans-serif;
+  color: #3c3c3c;
+}
+
+.btn-primary {
+  background-color: #fff;
+  color: #ffb03b;
+  border-color: #bbb;
+}
+.btn-primary:hover {
+  background-color: #ffb03b;
+  color: #fff;
+  border-color: #ffb03b;
+}
