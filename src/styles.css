@@ -9,7 +9,10 @@ body {
   color: #3c3c3c;
 }
 
-.btn-primary {
+.btn-primary,
+.btn-primary:active,
+.btn-primary:focus,
+.btn-primary:visited {
   background-color: #fff;
   color: #ffb03b;
   border-color: #bbb;
