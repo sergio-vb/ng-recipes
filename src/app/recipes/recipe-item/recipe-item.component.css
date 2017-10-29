@@ -14,3 +14,9 @@
   color: #b1b1b1;
   font-family: Satisfy, 'Open Sans', arial;
 }
+.pull-left{
+  width: 80%;
+}
+.pull-right{
+  width: 20%;
+}
