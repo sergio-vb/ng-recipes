@@ -22,3 +22,6 @@ body {
   color: #fff;
   border-color: #ffb03b;
 }
+.clickable{
+  cursor: pointer;
+}
