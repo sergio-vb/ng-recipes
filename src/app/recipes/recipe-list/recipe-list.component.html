@@ -5,6 +5,12 @@
 </div>
 <div class="row">
     <ul class="col-xs-12">
-        <li app-recipe-item *ngFor="let recipeElement of recipes" [recipe]="recipeElement" class="list-group-item"></li>
+        <li app-recipe-item 
+            *ngFor="let recipeElement of recipes; let i = index" 
+            [recipe]="recipeElement" 
+            class="list-group-item"
+            [routerLink]="i"
+            routerLinkActive="active"
+        ></li>
     </ul>
 </div>

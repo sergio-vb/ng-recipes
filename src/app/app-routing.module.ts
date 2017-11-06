@@ -9,7 +9,7 @@ import { ShoppingListComponent } from './shopping-list/shopping-list.component';
 const appRoutes: Routes = [
   { path: 'recipes', component: RecipesComponent, children: [
     { path: '', component: RecipeDefaultComponent},
-    { path: 'detail', component: RecipeDetailComponent},
+    { path: ':id', component: RecipeDetailComponent},
   ]},
   { path: 'shopping-list', component:   ShoppingListComponent },
   { path: '', redirectTo: 'recipes', pathMatch: 'full' }
