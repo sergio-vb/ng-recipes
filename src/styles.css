@@ -2,8 +2,9 @@
 
 body {
   /* background: #b5decc; */
-  background: url(./assets/images/banner-bg.jpg) no-repeat center top;
+  background: url(./assets/images/banner-bg2.jpg) no-repeat center top;
   background-size: cover;
+  /* background: rgb(253, 253, 253); */
   min-height: 630px;
   font-family: 'Open Sans', sans-serif;
   color: #3c3c3c;
@@ -31,7 +32,7 @@ body {
 .list-group-item.active,
 .list-group-item.active:focus,
 .list-group-item.active:hover {
-  background-color: #f5f5f5;
+  background-color: #ffffff; /*#756257, #f5f5f5*/
   border-color: #ffb03b;
   z-index: 1;
   outline: none;

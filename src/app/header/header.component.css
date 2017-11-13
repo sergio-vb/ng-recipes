@@ -1,6 +1,8 @@
 /* Selectors' specificity taken from Bootstrap's defaults, in order to override the necessary styles */
-.navbar {
+nav.navbar {
   background: #fff;
+  border-bottom: 1px solid #C0C0C0;
+  border-radius: 0;
 }
 *,
 .navbar-default .navbar-brand,
