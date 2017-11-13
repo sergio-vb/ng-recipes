@@ -4,4 +4,5 @@
   border-radius: 9px;
   border:1px solid #C0C0C0;
   padding: 1.5em 1.6em;
+  min-height: 80vh;
 }
