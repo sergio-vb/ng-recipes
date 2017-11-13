@@ -2,11 +2,13 @@
   <div class="col-xs-10">
     <app-shopping-list-edit></app-shopping-list-edit>
     <hr>
+    <h4>Your existing shopping list:</h4>
     <ul class="list-group">
       <li 
+        (click)="onEditItem(i)"
+        *ngFor="let ingredient of ingredients; let i = index"
         class="list-group-item" 
         style="cursor: pointer"
-        *ngFor="let ingredient of ingredients"
       >
         {{ingredient.name}} ({{ingredient.amount}})
       </li>
