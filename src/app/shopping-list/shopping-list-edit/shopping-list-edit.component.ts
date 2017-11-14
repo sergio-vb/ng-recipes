@@ -24,7 +24,7 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
       ingredientName: new FormControl(null, [Validators.required]),
       ingredientAmount: new FormControl(null, [
         Validators.required,
-        Validators.pattern('^[1-9]+[0-9]*$')
+        Validators.pattern(/^[1-9]+[0-9]*$/)
       ])
     });
 
