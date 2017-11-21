@@ -1,12 +1,13 @@
 import { Subject } from 'rxjs/Subject';
 import { Http } from '@angular/http';
 import { Injectable } from '@angular/core';
+import 'rxjs';
 
 import { Recipe } from './recipe.model';
 import { Ingredient } from '../shared/ingredient.model';
 
 @Injectable()
-export class RecipeService {
+export class RecipeService{
 
   constructor(private http: Http){}
 
@@ -29,8 +30,8 @@ export class RecipeService {
       'Magnificent Pizza',
       'Best pizza ever',
       'https://vignette2.wikia.nocookie.net/le-miiverse-resource/images/5/5d/Delicious_pizza_t2.jpg/revision/latest?cb=20141016025745'
-    )
-    */
+    )*/
+    
     new Recipe(
       'Skillet Chicken and Quinoa with Fresh Salsa',
       'A filling and fresh dish. Topping with the homemade salsa is a must!',
@@ -46,6 +47,14 @@ export class RecipeService {
   ];
 
   getRecipes() {
+
+    // this.http.get("https://ng-recipes-1sv94.firebaseio.com/recipes.json")
+    // .map(response => response.json())
+    // .subscribe( (data) => {
+    //   console.log("Data:", data);
+    //   this.recipes = data;
+    // });
+
     return this.recipes.slice(); //Returns a copy, to avoid giving direct access
   }
   getRecipe(index) {
@@ -65,5 +74,11 @@ export class RecipeService {
   }
   saveRecipesToBackend(){
     console.log("Saving recipes to db");
+    this.http.put("https://ng-recipes-1sv94.firebaseio.com/recipes.json", this.recipes)
+      .map((response) => response.json())
+      .subscribe(
+        response => console.log(response),
+        error => console.log(error)
+      );
   }
 }
