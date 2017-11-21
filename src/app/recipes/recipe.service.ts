@@ -1,9 +1,17 @@
 import { Subject } from 'rxjs/Subject';
+import { Http } from '@angular/http';
+import { Injectable } from '@angular/core';
 
 import { Recipe } from './recipe.model';
 import { Ingredient } from '../shared/ingredient.model';
 
+@Injectable()
 export class RecipeService {
+
+  constructor(private http: Http){}
+
+  /* https://ng-recipes-1sv94.firebaseio.com/ */
+
   recipesUpdated = new Subject<Recipe[]>();
   private recipes: Recipe[] = [
     /*
@@ -54,5 +62,8 @@ export class RecipeService {
   deleteRecipe(index){
     this.recipes.splice(index, 1);
     this.recipesUpdated.next(this.recipes.slice());    
+  }
+  saveRecipesToBackend(){
+    console.log("Saving recipes to db");
   }
 }
