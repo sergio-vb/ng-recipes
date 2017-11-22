@@ -47,14 +47,6 @@ export class RecipeService{
   ];
 
   getRecipes() {
-
-    // this.http.get("https://ng-recipes-1sv94.firebaseio.com/recipes.json")
-    // .map(response => response.json())
-    // .subscribe( (data) => {
-    //   console.log("Data:", data);
-    //   this.recipes = data;
-    // });
-
     return this.recipes.slice(); //Returns a copy, to avoid giving direct access
   }
   getRecipe(index) {
@@ -62,17 +54,17 @@ export class RecipeService{
   }
   addRecipe(recipe:Recipe){
     this.recipes.push(recipe);
-    this.recipesUpdated.next(this.recipes.slice());
+    this.recipesUpdated.next(this.getRecipes());
   }
   updateRecipe(index:number, recipe:Recipe){
     this.recipes[index] = recipe;
-    this.recipesUpdated.next(this.recipes.slice());    
+    this.recipesUpdated.next(this.getRecipes());    
   }
   deleteRecipe(index){
     this.recipes.splice(index, 1);
-    this.recipesUpdated.next(this.recipes.slice());    
+    this.recipesUpdated.next(this.getRecipes());    
   }
-  saveRecipesToBackend(){
+  storeRecipes(){
     console.log("Saving recipes to db");
     this.http.put("https://ng-recipes-1sv94.firebaseio.com/recipes.json", this.recipes)
       .map((response) => response.json())
@@ -80,5 +72,21 @@ export class RecipeService{
         response => console.log(response),
         error => console.log(error)
       );
+  }
+  fetchRecipes(){
+    console.log("Fetching recipes from db");
+    this.http.get("https://ng-recipes-1sv94.firebaseio.com/recipes.json")
+    .map(response => response.json())
+    .map(recipes => {
+      for (let recipe of recipes){
+        recipe.ingredients = recipe.ingredients || []; //Adds ingredients property if not present
+      }
+      return recipes;
+    })
+    .subscribe(recipes => {
+      console.log("Data:", recipes);
+      this.recipes = recipes;
+      this.recipesUpdated.next(this.getRecipes());
+    });
   }
 }
