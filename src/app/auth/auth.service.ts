@@ -9,6 +9,7 @@ export class AuthService {
                 error => console.log(error)
             )
     }
+
     // Example method using promises:
     // signinUser(email: string, password: string){
     //     firebase.auth().signInWithEmailAndPassword(email, password)
@@ -26,7 +27,7 @@ export class AuthService {
     // }
 
     //Method refactored to use async/await:
-    async signinUser(email: string, password: string){
+    async loginUser(email: string, password: string){
         try{
             const response = await firebase.auth().signInWithEmailAndPassword(email, password);
         }catch(error){
@@ -39,5 +40,14 @@ export class AuthService {
     async getToken(){
         this.token = await firebase.auth().currentUser.getToken();
         return this.token;
+    }
+
+    isAuthenticated(){
+        return this.token != null;
+    }
+
+    logoutUser(){
+        firebase.auth().signOut();
+        this.token = null;
     }
 }
