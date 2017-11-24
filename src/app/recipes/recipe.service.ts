@@ -5,11 +5,14 @@ import 'rxjs';
 
 import { Recipe } from './recipe.model';
 import { Ingredient } from '../shared/ingredient.model';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable()
 export class RecipeService{
 
-  constructor(private http: Http){}
+  constructor(
+    private http: Http,
+    private authService: AuthService){}
 
   /* https://ng-recipes-1sv94.firebaseio.com/ */
 
@@ -64,18 +67,18 @@ export class RecipeService{
     this.recipes.splice(index, 1);
     this.recipesUpdated.next(this.getRecipes());    
   }
-  storeRecipes(){
-    console.log("Saving recipes to db");
-    this.http.put("https://ng-recipes-1sv94.firebaseio.com/recipes.json", this.recipes)
+  async storeRecipes(){
+    const token = await this.authService.getToken();
+    this.http.put("https://ng-recipes-1sv94.firebaseio.com/recipes.json?auth=" + token, this.recipes)
       .map((response) => response.json())
       .subscribe(
         response => console.log(response),
         error => console.log(error)
       );
   }
-  fetchRecipes(){
-    console.log("Fetching recipes from db");
-    this.http.get("https://ng-recipes-1sv94.firebaseio.com/recipes.json")
+  async fetchRecipes(){
+    const token = await this.authService.getToken();
+    this.http.get("https://ng-recipes-1sv94.firebaseio.com/recipes.json?auth=" + token)
     .map(response => response.json())
     .map(recipes => {
       for (let recipe of recipes){
