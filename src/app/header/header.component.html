@@ -21,7 +21,7 @@
         </ng-template>
         
         <ng-template #loggedout>
-          <li><a>Log Out</a></li>
+          <li><a class="clickable" (click)="onLogout()">Log Out</a></li>
           <li class="dropdown" appDropdown>
             <a class="dropdown-toggle" role="button">Manage
               <span class="caret"></span>
