@@ -8,8 +8,6 @@ import { SigninComponent } from './auth/signin/signin.component';
 const appRoutes: Routes = [
   { path: 'shopping-list', component:   ShoppingListComponent },
   { path: '', redirectTo: 'recipes', pathMatch: 'full' },
-  { path: 'signup', component: SignupComponent },
-  { path: 'signin', component: SigninComponent }
 ];
 
 @NgModule({

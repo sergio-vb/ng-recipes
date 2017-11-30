@@ -8,7 +8,7 @@ import { RecipeDetailComponent } from './recipe-detail/recipe-detail.component';
 import { RecipesComponent } from './recipes.component';
 import { RecipeDefaultComponent } from './recipe-default/recipe-default.component';
 import { RecipeEditComponent } from './recipe-edit/recipe-edit.component';
-import { RecipesRoutingModule } from './recipes-routing-module';
+import { RecipesRoutingModule } from './recipes-routing.module';
 import { SharedModule } from '../shared/shared.module';
 
 @NgModule({
