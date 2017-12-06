@@ -1,5 +1,5 @@
 import { Subject } from 'rxjs/Subject';
-import { Http } from '@angular/http';
+import { HttpClient, HttpParams, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import 'rxjs';
 
@@ -11,10 +11,10 @@ import { AuthService } from '../auth/auth.service';
 export class RecipeService{
 
   constructor(
-    private http: Http,
+    private httpClient: HttpClient,
     private authService: AuthService){}
 
-  /* https://ng-recipes-1sv94.firebaseio.com/ */
+  /* Firebase url: https://ng-recipes-1sv94.firebaseio.com/ */
 
   recipesUpdated = new Subject<Recipe[]>();
   private recipes: Recipe[] = [
@@ -67,10 +67,19 @@ export class RecipeService{
     this.recipes.splice(index, 1);
     this.recipesUpdated.next(this.getRecipes());    
   }
+  
   async storeRecipes(){
     const token = await this.authService.getToken();
-    this.http.put("https://ng-recipes-1sv94.firebaseio.com/recipes.json?auth=" + token, this.recipes)
-      .map((response) => response.json())
+    // this.httpClient.put("https://ng-recipes-1sv94.firebaseio.com/recipes.json", this.recipes, {
+    //   //headers: new HttpHeaders().set('Authorization', 'Bearer lorem ipsum') Example of setting headers, not needed in this case
+    //   params: new HttpParams().set('auth', token),
+    //   //observe: 'events'
+    // })
+    const req = new HttpRequest('PUT', 'https://ng-recipes-1sv94.firebaseio.com/recipes.json', this.recipes, {
+      params: new HttpParams().set('auth', token),
+      reportProgress: true
+    });
+    this.httpClient.request(req)
       .subscribe(
         response => console.log(response),
         error => console.log(error)
@@ -78,8 +87,7 @@ export class RecipeService{
   }
   async fetchRecipes(){
     const token = await this.authService.getToken();
-    this.http.get("https://ng-recipes-1sv94.firebaseio.com/recipes.json?auth=" + token)
-    .map(response => response.json())
+    this.httpClient.get<Recipe[]>("https://ng-recipes-1sv94.firebaseio.com/recipes.json?auth=" + token)
     .map(recipes => {
       for (let recipe of recipes){
         recipe.ingredients = recipe.ingredients || []; //Adds ingredients property if not present
