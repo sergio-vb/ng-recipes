@@ -43,8 +43,10 @@ export class AuthService {
         this.token = await firebase.auth().currentUser.getToken();
     }
 
-    async getToken(){
-        this.token = await firebase.auth().currentUser.getToken();
+    getToken(){
+        firebase.auth().currentUser.getToken().then(token => {
+            this.token = token;
+        });
         return this.token;
     }
 

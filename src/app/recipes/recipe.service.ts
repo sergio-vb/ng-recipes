@@ -69,14 +69,15 @@ export class RecipeService{
   }
   
   async storeRecipes(){
-    const token = await this.authService.getToken();
+    //const token = await this.authService.getToken();
+    
     // this.httpClient.put("https://ng-recipes-1sv94.firebaseio.com/recipes.json", this.recipes, {
     //   //headers: new HttpHeaders().set('Authorization', 'Bearer lorem ipsum') Example of setting headers, not needed in this case
     //   params: new HttpParams().set('auth', token),
     //   //observe: 'events'
     // })
     const req = new HttpRequest('PUT', 'https://ng-recipes-1sv94.firebaseio.com/recipes.json', this.recipes, {
-      params: new HttpParams().set('auth', token),
+      //params: new HttpParams().set('auth', token),
       reportProgress: true
     });
     this.httpClient.request(req)
@@ -86,8 +87,10 @@ export class RecipeService{
       );
   }
   async fetchRecipes(){
-    const token = await this.authService.getToken();
-    this.httpClient.get<Recipe[]>("https://ng-recipes-1sv94.firebaseio.com/recipes.json?auth=" + token)
+    //const token = await this.authService.getToken();
+    
+    // this.httpClient.get<Recipe[]>("https://ng-recipes-1sv94.firebaseio.com/recipes.json?auth=" + token)
+    this.httpClient.get<Recipe[]>("https://ng-recipes-1sv94.firebaseio.com/recipes.json")
     .map(recipes => {
       for (let recipe of recipes){
         recipe.ingredients = recipe.ingredients || []; //Adds ingredients property if not present
