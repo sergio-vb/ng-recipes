@@ -8,7 +8,7 @@ import { ShoppingListService } from '../shopping-list.service';
 @Component({
   selector: 'app-shopping-list-edit',
   templateUrl: './shopping-list-edit.component.html',
-  styleUrls: ['./shopping-list-edit.component.css']
+  styleUrls: ['./shopping-list-edit.component.scss']
 })
 export class ShoppingListEditComponent implements OnInit, OnDestroy {
   ingredientForm: FormGroup;
