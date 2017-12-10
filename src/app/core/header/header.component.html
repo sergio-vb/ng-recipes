@@ -1,17 +1,17 @@
-<nav class="navbar navbar-default">
+<!-- <nav class="navbar navbar-default">
   <div class="container-fluid">
     <div class="navbar-header">
       <a class="navbar-brand" routerLink="/recipes" >The Chef's book</a>
     </div>
 
     <div class="navbar-default">
-      <!-- Alternative classes: collapse navbar-collapse -->
+      <!-- Alternative classes: collapse navbar-collapse
       <ul class="nav navbar-nav">
         <li routerLinkActive="active"><a routerLink="/recipes">Recipes</a></li>
         <li routerLinkActive="active"><a routerLink="/shopping-list">Shopping List</a></li>
       </ul>
 
-      <!-- Right section of menu -->
+      <!-- Right section of menu
       <ul class="nav navbar-nav navbar-right">
         <div *ngIf="!authService.isAuthenticated(); then loggedin else loggedout"></div>
         
@@ -37,4 +37,25 @@
       
     </div>
   </div>
+</nav> -->
+
+<nav>
+  <div class="nav-wrapper deep-orange darken-1">
+    <a href="#" class="brand-logo" routerLink="/">The Chef's book</a>
+    <ul id="nav-mobile" class="right hide-on-med-and-down">
+      <li routerLinkActive="active"><a routerLink="/recipes">Recipes</a></li>
+      <li routerLinkActive="active"><a routerLink="/shopping-list">Shopping List</a></li>
+      <li>|</li>
+
+      <div *ngIf="!authService.isAuthenticated(); then loggedin else loggedout"></div>
+      <ng-template #loggedin>
+        <li routerLinkActive="active"><a routerLink="/signup">Register</a></li>
+        <li routerLinkActive="active"><a routerLink="/signin">Log In</a></li>
+      </ng-template>
+      <ng-template #loggedout>
+        <li routerLinkActive="active"><a class="clickable" (click)="onLogout()">Log Out</a></li>
+      </ng-template>
+    </ul>
+  </div>
 </nav>
+
