@@ -1,4 +1,4 @@
-<div class="clearfix item-container">
+<!-- <div class="clearfix item-container">
   <div class="pull-left">
     <h4 class="list-group-item-heading">{{recipe.name}}</h4>
     <p class="list-group-item-text">{{recipe.description}}</p>
@@ -6,4 +6,11 @@
   <span class="pull-right">
     <img [src]="recipe.imagePath" alt="{{recipe.name}}" class="img-responsive">
   </span>
+</div> -->
+
+<img [src]="recipe.imagePath" alt="{{recipe.name}}" class="circle">
+<div class="inner-container">
+  <span class="title">{{recipe.name}}</span>
+  <p class="truncate">{{recipe.description}}</p>  
 </div>
+<a href="#!" class="secondary-content"><i class="material-icons">grade</i></a>
