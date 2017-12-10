@@ -19,7 +19,11 @@
 // .navbar-nav {
 //   font-family: 'PT Sans', sans-serif;
 // }
-
+nav{
+  position: fixed;
+  top: 0;
+  z-index: 10;
+}
 .brand-logo{
   font-family: 'Satisfy', sans-serif;
   font-size: 1.8em;
