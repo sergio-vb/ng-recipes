@@ -54,7 +54,7 @@
     <span class="card-title">{{recipe.name}}</span>
   </div>
   <div class="card-content">
-    <p>{{recipe.description}}</p>
+    <div class="recipe-description" [innerHTML]="recipe.description"></div>
     <h5>Ingredients:</h5>
     <ul class="collection">
       <li class="collection-item" *ngFor="let ingredient of recipe.ingredients">{{ ingredient.name }} - {{ ingredient.amount }}</li>

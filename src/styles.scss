@@ -8,3 +8,13 @@ html {
 .clickable {
     cursor: pointer;
 }
+
+
+
+/* Styles for the recipes descriptions, which are injected as innerHTML to preserve user formatting.
+The specificity is needed to overwrite Materialize default styles*/
+.card .card-content .recipe-description{ 
+    p{
+        margin: 1em 0;
+    }
+}
