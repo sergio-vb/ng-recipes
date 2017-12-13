@@ -35,27 +35,37 @@
     <section class="sign-in card-panel">
         <i class="icon material-icons medium">account_circle</i>
         <h1>Log In To Existing Account</h1>
-        <form>
+        <form (ngSubmit)="onSignin(form)" #form="ngForm">
           <div class="row">
             <div class="input-field">
-              <input id="email" type="email" class="validate">
+              <input 
+                class="form-control validate" 
+                type="email" 
+                id="email" 
+                name="email" 
+                ngModel
+                required
+                email
+              >
               <label for="email">Email</label>
             </div>
           </div>
           <div class="row">
             <div class="input-field">
-              <input id="password" type="password" class="validate">
+              <input 
+                class="form-control validate" 
+                type="password" 
+                id="password" 
+                name="password" 
+                ngModel
+                required
+                minlength="6"
+              >
               <label for="password">Password</label>
             </div>
           </div>
-          <!-- <div class="row">
-            <div class="input-field">
-              <input id="password" type="password" class="validate">
-              <label for="password">Confirm Password</label>
-            </div>
-          </div> -->
         
-          <button class="btn waves-effect waves-light" type="submit" name="action">
+          <button class="btn waves-effect waves-light" type="submit" name="action" [disabled]="!form.valid">
             Log In<i class="material-icons right">send</i>
           </button>
         </form>
