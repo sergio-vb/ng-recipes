@@ -1,21 +1,21 @@
 <div class="row">
-  <div class="col-xs-12">
-    <p>Add a new ingredient here, or click an item from the shopping list below to edit it here.</p>
+  <div class="col s12">
+    <p class="description">Add a new ingredient here, or click an item from the shopping list below to edit it here.</p>
     <form [formGroup]="ingredientForm" (ngSubmit)="onAddItem()">
       <div class="row">
-        <div class="col-sm-5 form-group">
+        <div class="col s5 input-field">
           <label for="name">Name</label>
           <input 
-            class="form-control"
+            class="form-control validate"
             formControlName="ingredientName"
             id="name" 
             type="text" 
           >
         </div>
-        <div class="col-sm-2 form-group">
+        <div class="col s1 input-field">
           <label for="amount">Amount</label>
           <input 
-            class="form-control"
+            class="form-control validate"
             formControlName="ingredientAmount"
             id="amount" 
             min="0"
@@ -24,10 +24,10 @@
         </div>
       </div>
       <div class="row">
-        <div class="col-xs-12">
-          <button class="btn btn-success" type="submit" [disabled]="!ingredientForm.valid">{{ editMode ? "Update" : "Add"}}</button>
-          <button class="btn btn-danger" type="button" (click)="onDeleteIngredient()" [disabled]="!editMode">Delete</button>
-          <button class="btn btn-primary" type="button" (click)="onClearForm()">{{ editMode ? "Cancel" : "Clear"}}</button>
+        <div class="col s12">
+          <button class="btn waves-effect waves-light" type="submit" [disabled]="!ingredientForm.valid">{{ editMode ? "Update" : "Add"}}</button>
+          <button class="btn waves-effect waves-light" type="button" (click)="onDeleteIngredient()" [disabled]="!editMode">Delete</button>
+          <button class="btn waves-effect waves-light" type="button" (click)="onClearForm()">{{ editMode ? "Cancel" : "Clear"}}</button>
         </div>
       </div>
     </form>
