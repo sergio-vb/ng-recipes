@@ -1,5 +1,14 @@
-.placeholder {
-  text-align: center;
-  color: #ffb03b;
-  font-size: 1.3em;
+// .placeholder {
+//   text-align: center;
+//   color: #ffb03b;
+//   font-size: 1.3em;
+// }
+.recipes-container{
+    margin-bottom: 0;
+}
+.recipe-list{
+    padding-top: 1rem;
+    background: rgba(255, 255, 255, 0.9);
+    height: calc( 100vh - 64px);
+    position: fixed;
 }

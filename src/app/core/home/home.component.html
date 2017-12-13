@@ -1,1 +1,35 @@
-<h2>Welcome to the Recipe Book</h2>
+<div class="container">
+    <h1>Welcome to The Chef's Book</h1>
+    <div class="row">
+      <div class="col s8 offset-s2">
+          <p>In this app you can create, share and find delicious recipes to suit all your tastes! Then you can send all the required ingredients to your own customized shopping list, so you'll never forget anything!</p>
+          <p>Select either the recipes menu or shopping list to get started:</p>
+      </div>
+    </div>
+    
+    <div class="row">
+        <div class="col s4 offset-s1">
+            <div class="card hoverable white clickable" routerLink="/recipes">
+                <div class="card-content">
+                  <span class="card-title">Recipes</span>
+                  <p>Search recipes or create your own ones.</p>
+                </div>
+                <div class="card-action">
+                  <a>Go to Recipes</a>
+                </div>
+              </div>
+        </div>
+        <div class="col s4 offset-s2">
+            <div class="card hoverable white clickable" routerLink="/shopping-list">
+                <div class="card-content">
+                  <span class="card-title">Shopping List</span>
+                  <p>Access all the ingredients in your shopping list.</p>
+                </div>
+                <div class="card-action">
+                  <a>Go to Shopping List</a>
+                </div>
+              </div>
+        </div>
+
+    </div>
+</div>

@@ -1,21 +1,31 @@
-/* Selectors' specificity taken from Bootstrap's defaults, in order to override the necessary styles */
-nav.navbar {
-  background: #fff;
-  border-bottom: 1px solid #C0C0C0;
-  border-radius: 0;
+// /* Selectors' specificity taken from Bootstrap's defaults, in order to override the necessary styles */
+// nav.navbar {
+//   background: #fff;
+//   border-bottom: 1px solid #C0C0C0;
+//   border-radius: 0;
+// }
+// *,
+// .navbar-default .navbar-brand,
+// .navbar-default .navbar-nav > li > a {
+//   color: #ffb03b;
+// }
+// .navbar-default {
+//   border: none;
+// }
+// .navbar-brand {
+//   font-family: 'Satisfy', sans-serif;
+//   font-size: 1.8em;
+// }
+// .navbar-nav {
+//   font-family: 'PT Sans', sans-serif;
+// }
+nav{
+  position: fixed;
+  top: 0;
+  z-index: 10;
 }
-*,
-.navbar-default .navbar-brand,
-.navbar-default .navbar-nav > li > a {
-  color: #ffb03b;
-}
-.navbar-default {
-  border: none;
-}
-.navbar-brand {
+.brand-logo{
   font-family: 'Satisfy', sans-serif;
   font-size: 1.8em;
-}
-.navbar-nav {
-  font-family: 'PT Sans', sans-serif;
+  margin-left: 1em;
 }

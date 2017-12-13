@@ -1,16 +1,10 @@
-<div class="row">
-    <div class="col-xs-12">
-        <button class="btn btn-primary add-recipe" routerLink="new">Add New Recipe</button>
-    </div>
-</div>
-<div class="row">
-    <ul class="col-xs-12">
-        <li app-recipe-item 
-            *ngFor="let recipeElement of recipes; let i = index" 
-            [recipe]="recipeElement" 
-            class="list-group-item"
-            [routerLink]="i"
-            routerLinkActive="active"
-        ></li>
-    </ul>
+<a class="waves-effect waves-light btn" routerLink="new">Add New Recipe</a>
+<div class="collection">
+    <a app-recipe-item 
+        *ngFor="let recipeElement of recipes; let i = index" 
+        [recipe]="recipeElement" 
+        class="collection-item avatar"
+        [routerLink]="i"
+        routerLinkActive="active"
+    ></a>
 </div>

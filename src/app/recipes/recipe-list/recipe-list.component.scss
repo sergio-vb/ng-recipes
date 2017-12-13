@@ -1,11 +1,15 @@
-.add-recipe {
-  margin-bottom: 1em;
-}
-.list-group-item {
-  cursor: pointer;
-}
-.list-group-item:hover {
-  background-color: #ffffff; /*756257, #f5f5f5*/
-  border-color: #ffb03b;
-  z-index: 1;
+// .add-recipe {
+//   margin-bottom: 1em;
+// }
+// .list-group-item {
+//   cursor: pointer;
+// }
+// .list-group-item:hover {
+//   background-color: #ffffff; /*756257, #f5f5f5*/
+//   border-color: #ffb03b;
+//   z-index: 1;
+// }
+.collection{
+    height: 90%;
+    overflow: auto;
 }
