@@ -1,14 +1,14 @@
-<div class="row">
-    <div class="col-xs-12">
+<!-- <div class="row">
+    <div class="col s12">
         <form [formGroup]="recipeForm" (ngSubmit)="onSubmit()">
             <div class="row">
-                <div class="col-xs-12">
+                <div class="col s12">
                     <button type="submit" class="btn btn-success" [disabled]="!recipeForm.valid">Save</button>
                     <button type="button" class="btn btn-danger" (click)="onCancel()">Cancel</button>
                 </div>
             </div>
             <div class="row">
-                <div class="col-xs-12">
+                <div class="col s12">
                     <div class="form-group">
                         <label for="name">Name</label>
                         <input type="text" id="name" class="form-control" formControlName="name">
@@ -16,7 +16,7 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-xs-12">
+                <div class="col s12">
                     <div class="form-group">
                         <label for="imagePath">Image URL</label>
                         <input type="text" id="imagePath" class="form-control" formControlName="imagePath" #imagePath>
@@ -24,12 +24,12 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-xs-12">
+                <div class="col s12">
                     <img [src]="imagePath.value" class="img-responsive">
                 </div>
             </div>
             <div class="row">
-                <div class="col-xs-12">
+                <div class="col s12">
                     <div class="form-group">
                         <label for="description">Description</label>
                         <textarea type="text" id="description" class="form-control" rows="6"  formControlName="description"></textarea>
@@ -37,32 +37,32 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-xs-12" formArrayName="ingredients">
+                <div class="col s12" formArrayName="ingredients">
                     <div 
                         class="row ingredient-row" 
                         *ngFor="let ingredientCrl of recipeForm.get('ingredients').controls; let i = index"
                         [formGroupName]="i"
                     >
-                        <div class="col-xs-8">
+                        <div class="col s8">
                             <input 
                                 type="text" 
                                 class="form-control" 
                                 formControlName="name">
                         </div>
-                        <div class="col-xs-2">
+                        <div class="col s2">
                             <input 
                                 type="number" 
                                 class="form-control"
                                 formControlName="amount"
                                 min="0">
                         </div>
-                        <div class="col-xs-2">
+                        <div class="col s2">
                             <button type="button" class="btn btn-danger" (click)="onDeleteIngredient(i)">X</button>
                         </div>
                     </div>
                     <hr>
                     <div class="row">
-                        <div class="col-xs-12">
+                        <div class="col s12">
                             <button 
                                 type="button"
                                 class="btn btn-success" 
@@ -74,4 +74,88 @@
             </div>
         </form>
     </div>
+</div> -->
+<div class="card-panel">
+
+    <h5 class="title">Enter your new recipe:</h5>
+
+    <form [formGroup]="recipeForm" (ngSubmit)="onSubmit()">
+
+        <div class="row">
+            <div class="col s12">
+                <div class="input-field">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" class="form-control validate" formControlName="name">
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12">
+                <div class="input-field">
+                    <label for="imagePath">Image URL</label>
+                    <input type="text" id="imagePath" class="form-control validate" formControlName="imagePath" #imagePath>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12">
+                <img [src]="imagePath.value" class="responsive-img">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12">
+                <div class="input-field">
+                    <label for="description">Description</label>
+                    <textarea type="text" id="description" class="form-control materialize-textarea" rows="6"  formControlName="description"></textarea>
+                </div>
+            </div>
+        </div>
+        
+        <h6 class="subtitle">Ingredients:</h6>
+
+        <div class="row">
+            <div class="col s12" formArrayName="ingredients">
+                <div 
+                    class="row ingredient-row" 
+                    *ngFor="let ingredientCrl of recipeForm.get('ingredients').controls; let i = index"
+                    [formGroupName]="i"
+                >
+                    <div class="col s9">
+                        <input 
+                            type="text" 
+                            class="form-control validate" 
+                            formControlName="name">
+                    </div>
+                    <div class="col s2">
+                        <input 
+                            type="number" 
+                            class="form-control validate"
+                            formControlName="amount"
+                            min="0">
+                    </div>
+                    <div class="col s1">
+                        <div class="cancel clickable" (click)="onDeleteIngredient(i)">
+                            <i class="material-icons">cancel</i></div>
+                        </div>
+                </div>
+                
+                <div class="row">
+                    <div class="col s12">
+                        <button 
+                            type="button"
+                            class="btn waves-effect waves-light" 
+                            (click)="onAddIngredient()"
+                        >Add Ingredient</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+                <div class="col s12">
+                    <button type="button" class="btn waves-effect waves-light" (click)="onCancel()">Cancel</button>
+                    <button type="submit" class="btn waves-effect waves-light" [disabled]="!recipeForm.valid">Save</button>
+                </div>
+            </div>
+    </form>
 </div>
