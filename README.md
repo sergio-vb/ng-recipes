@@ -21,6 +21,7 @@ Recipes
 - Add uploading functionality for images
 
 Shopping List
+- Fix bug of overlapping labels when clicking on an ingredient
 - Add units to ingredients
 
 Authentication

@@ -84,7 +84,7 @@
         <div class="row">
             <div class="col s12">
                 <div class="input-field">
-                    <label for="name">Name</label>
+                    <label for="name">Recipe Title</label>
                     <input type="text" id="name" class="form-control validate" formControlName="name">
                 </div>
             </div>
@@ -97,15 +97,17 @@
                 </div>
             </div>
         </div>
+        
         <div class="row">
             <div class="col s12">
                 <img [src]="imagePath.value" class="responsive-img">
             </div>
         </div>
+        
         <div class="row">
             <div class="col s12">
                 <div class="input-field">
-                    <label for="description">Description</label>
+                    <label for="description">Description and Preparation</label>
                     <textarea type="text" id="description" class="form-control materialize-textarea" rows="6"  formControlName="description"></textarea>
                 </div>
             </div>
@@ -115,43 +117,50 @@
 
         <div class="row">
             <div class="col s12" formArrayName="ingredients">
-                <div 
-                    class="row ingredient-row" 
-                    *ngFor="let ingredientCrl of recipeForm.get('ingredients').controls; let i = index"
-                    [formGroupName]="i"
-                >
-                    <div class="col s9">
-                        <input 
-                            type="text" 
-                            class="form-control validate" 
-                            formControlName="name">
+                <div class="ingredients-wrapper">
+                    <div class="row ingredients-header">
+                        <div class="col s6">Ingredient name</div>
+                        <div class="col s1">Amount</div>
                     </div>
-                    <div class="col s2">
-                        <input 
-                            type="number" 
-                            class="form-control validate"
-                            formControlName="amount"
-                            min="0">
-                    </div>
-                    <div class="col s1">
-                        <div class="cancel clickable" (click)="onDeleteIngredient(i)">
-                            <i class="material-icons">cancel</i></div>
+                    <div 
+                        class="row ingredient-row" 
+                        *ngFor="let ingredientCrl of recipeForm.get('ingredients').controls; let i = index"
+                        [formGroupName]="i"
+                    >
+                        <div class="col s6">
+                            <input 
+                                type="text" 
+                                class="form-control validate" 
+                                formControlName="name">
                         </div>
-                </div>
-                
-                <div class="row">
-                    <div class="col s12">
-                        <button 
-                            type="button"
-                            class="btn waves-effect waves-light" 
-                            (click)="onAddIngredient()"
-                        >Add Ingredient</button>
+                        <div class="col s1">
+                            <input 
+                                type="number" 
+                                class="form-control validate"
+                                formControlName="amount"
+                                min="0">
+                        </div>
+                        <div class="col s1">
+                            <div class="cancel clickable" (click)="onDeleteIngredient(i)">
+                                <i class="material-icons">cancel</i></div>
+                            </div>
                     </div>
+                    
+                    <div class="row add-ingredients">
+                        <div class="col s12">
+                            <button 
+                                type="button"
+                                class="btn waves-effect waves-light" 
+                                (click)="onAddIngredient()"
+                            >Add Ingredient</button>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
 
-        <div class="row">
+        <div class="row main-actions">
                 <div class="col s12">
                     <button type="button" class="btn waves-effect waves-light" (click)="onCancel()">Cancel</button>
                     <button type="submit" class="btn waves-effect waves-light" [disabled]="!recipeForm.valid">Save</button>
