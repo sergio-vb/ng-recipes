@@ -4,9 +4,12 @@ import { Directive, HostListener, HostBinding} from '@angular/core';
     selector: '[appDropdown]'
 })
 export class DropdownDirective {
-    @HostBinding('class.open') isOpen:boolean = false;
+    @HostBinding('class.active') isOpen:boolean = false;
 
     @HostListener('click') onDropdownToggle(){
         this.isOpen = !this.isOpen;
+    }
+    @HostListener('mouseleave') onDropdownLeave(){
+        //this.isOpen = false;
     }
 }

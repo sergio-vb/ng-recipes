@@ -18,3 +18,20 @@ The specificity is needed to overwrite Materialize default styles*/
         margin: 1em 0;
     }
 }
+
+.dropdown-wrapper{
+
+    display: inline-flex;
+    flex-direction: column;
+
+    .dropdown-content{
+        position: static;
+    }
+
+    &.active{
+        .dropdown-content{
+            display: block;
+            opacity: 1;
+        }
+    }   
+}

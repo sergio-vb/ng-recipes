@@ -16,7 +16,6 @@ Global
 
 Recipes
 - *** Adding back Manage dropdown in recipe details
-- *** Fixing styling of new recipe view
 - Add custom pipe to remove HTML tags using a regexp.
 - Add uploading functionality for images
 
@@ -26,3 +25,6 @@ Shopping List
 
 Authentication
 - Add validation messages for sign in / sign up forms
+
+Done:
+- Fixing styling of new recipe view
