@@ -50,19 +50,18 @@
 
 <div class="card">
   <div class="card-image">
-    <!-- <img [src]="recipe.imagePath"> -->
+    <img [src]="recipe.imagePath">
     <span class="card-title">{{recipe.name}}</span>
   </div>
   <div class="card-content">
     
     <div class="dropdown-wrapper" appDropdown>
-      <a class="waves-effect waves-light btn dropdown-btn" data-activates="dropdown1">Manage Recipe<i class="material-icons right">arrow_drop_down</i></a>
+      <a class="btn dropdown-btn" data-activates="dropdown1">Manage Recipe<i class="material-icons right">arrow_drop_down</i></a>
       <!-- Dropdown Structure -->
       <ul id="dropdown1" class="dropdown-content">
-        <li><a href="#!">one</a></li>
-        <li><a href="#!">two</a></li>
-        <li class="divider"></li>
-        <li><a href="#!">three</a></li>
+        <li><a class="clickable" (click)="onAddToShoppingList()">To Shopping List</a></li>
+        <li><a class="clickable" routerLink="edit">Edit Recipe</a></li>
+        <li><a class="clickable" (click)="onDeleteRecipe()">Delete Recipe</a></li>
       </ul>
     </div>
     

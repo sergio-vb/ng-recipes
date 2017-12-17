@@ -14,6 +14,10 @@
 //   padding: 1em 0 1em;
 //   font-size: 1.2em;
 // }
+
+.card-content{
+    padding-top: 10px;
+}
 .card-image{
 
     height: 26em;
@@ -28,4 +32,36 @@
 .card-title{
     background: rgba(102, 187, 106, 0.67);
     width: 100%;
+}
+
+.dropdown-wrapper{
+    
+    margin-bottom: 1em;
+    font-size: 0.95em;
+    float: right;
+
+    .dropdown-btn{
+        
+        font-size: inherit;
+        padding: 0 1em;
+        height: 2.5em;
+        line-height: 2.5em;
+
+        .material-icons{
+            margin-left: 0;
+        }
+    }
+    .dropdown-content{
+
+        top: 34px;
+        
+        li > a{
+            font-size: inherit;
+        }
+    }
+
+}
+
+.recipe-description{
+    clear: both;
 }

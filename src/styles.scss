@@ -23,9 +23,12 @@ The specificity is needed to overwrite Materialize default styles*/
 
     display: inline-flex;
     flex-direction: column;
+    position: relative;
 
     .dropdown-content{
-        position: static;
+        position: absolute;
+        top: 36px;
+        width: 100%;
     }
 
     &.active{
