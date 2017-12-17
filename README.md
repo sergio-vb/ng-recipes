@@ -15,12 +15,12 @@ Global
 - Deleting commented bootstrap code after migration to materialize is complete
 
 Recipes
-- *** Adding back Manage dropdown in recipe details
 - Add custom pipe to remove HTML tags using a regexp.
 - Add uploading functionality for images
 
 Shopping List
-- Fix bug of overlapping labels when clicking on an ingredient
+- *** Fix bug of overlapping labels when clicking on an ingredient
+- * When adding ingredients from recipe to shopping list, add amount if ingredient already exists.
 - Add units to ingredients
 
 Authentication
@@ -28,3 +28,4 @@ Authentication
 
 Done:
 - Fixing styling of new recipe view
+- Adding back Manage dropdown in recipe details
