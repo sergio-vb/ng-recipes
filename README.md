@@ -10,6 +10,9 @@ Features:
 To Do's:
 
 Global
+- *** Update loading/saving functionality:
+    - Guests should be able to read all recipes
+    - Signed-in users should be able to create, edit and delete their own recipes
 - Add modal functionality for confirmation prompts
 - Add responsive materialize classes for small resolutions
 - Fix header for small resolutions
@@ -18,6 +21,7 @@ Global
 Recipes
 - Add custom pipe to remove HTML tags using a regexp.
 - Add uploading functionality for images
+- IMPROVEMENT: Add favorites functionality to mark specific recipes
 
 Shopping List
 - * When adding ingredients from recipe to shopping list, add amount if ingredient already exists.

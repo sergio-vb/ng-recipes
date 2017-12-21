@@ -1,6 +1,6 @@
 import { Subject } from 'rxjs/Subject';
 import { HttpClient, HttpParams, HttpRequest } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, OnInit } from '@angular/core';
 import 'rxjs';
 
 import { Recipe } from './recipe.model';
@@ -8,133 +8,21 @@ import { Ingredient } from '../shared/ingredient.model';
 import { AuthService } from '../auth/auth.service';
 
 @Injectable()
-export class RecipeService{
-
-  constructor(
-    private httpClient: HttpClient,
-    private authService: AuthService){}
+export class RecipeService {
 
   /* Firebase url: https://ng-recipes-1sv94.firebaseio.com/ */
 
   recipesUpdated = new Subject<Recipe[]>();
-  private recipes: Recipe[] = [
-    /*
-    new Recipe(
-      'A Recipe for Disaster',
-      'This is simply a test',
-      'https://static01.nyt.com/images/2015/10/15/dining/15RECIPE20DIN/15RECIPE20DIN-articleLarge.jpg'
-    ),
-    new Recipe(
-      'Delicious Lasagna',
-      'Test lasagna',
-      'https://static01.nyt.com/images/2015/10/15/dining/15RECIPE20DIN/15RECIPE20DIN-articleLarge.jpg'
-    ),
-    new Recipe(
-      'Magnificent Pizza',
-      'Best pizza ever',
-      'https://vignette2.wikia.nocookie.net/le-miiverse-resource/images/5/5d/Delicious_pizza_t2.jpg/revision/latest?cb=20141016025745'
-    )*/
-    
-    new Recipe(
-      'Skillet Chicken and Quinoa with Fresh Salsa',
-      `<p>A filling and fresh dish. Topping with the homemade salsa is a must!</p><p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Ex voluptatibus ipsum debitis provident animi recusandae molestiae natus iure aspernatur, voluptate, explicabo nemo! Dignissimos laboriosam dolor accusantium suscipit excepturi commodi non?</p>
-      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis quaerat odio possimus, nemo, natus commodi asperiores quam molestias architecto, est animi vero libero. Quia voluptatibus incidunt tempora cum sit distinctio.Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis quaerat odio possimus, nemo, natus commodi asperiores quam molestias architecto, est animi vero libero. Quia voluptatibus incidunt tempora cum sit distinctio.</p>
-      <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis quaerat odio possimus, nemo, natus commodi asperiores quam molestias architecto, est animi vero libero. Quia voluptatibus incidunt tempora cum sit distinctio.Lorem ipsum dolor sit amet consectetur adipisicing elit. Omnis quaerat odio possimus, nemo, natus commodi asperiores quam molestias architecto, est animi vero libero. Quia voluptatibus incidunt tempora cum sit distinctio.</p>`,
-      'http://images.media-allrecipes.com/userphotos/720x405/4535588.jpg',
-      [new Ingredient('Chicken', 200), new Ingredient('Tomato', 4)]
-    ),
-    new Recipe(
-      'Delicious Lasagna',
-      'Test lasagna',
-      'https://static01.nyt.com/images/2015/10/15/dining/15RECIPE20DIN/15RECIPE20DIN-articleLarge.jpg',
-      [new Ingredient('Meat', 100), new Ingredient('Tomato', 7)]
-    ),
-    new Recipe(
-      'Skillet Chicken and Quinoa with Fresh Salsa',
-      'A filling and fresh dish. Topping with the homemade salsa is a must!',
-      'http://images.media-allrecipes.com/userphotos/720x405/4535588.jpg',
-      [new Ingredient('Chicken', 200), new Ingredient('Tomato', 4)]
-    ),
-    new Recipe(
-      'Delicious Lasagna',
-      'Test lasagna',
-      'https://static01.nyt.com/images/2015/10/15/dining/15RECIPE20DIN/15RECIPE20DIN-articleLarge.jpg',
-      [new Ingredient('Meat', 100), new Ingredient('Tomato', 7)]
-    ),
-    new Recipe(
-      'Skillet Chicken and Quinoa with Fresh Salsa',
-      'A filling and fresh dish. Topping with the homemade salsa is a must!',
-      'http://images.media-allrecipes.com/userphotos/720x405/4535588.jpg',
-      [new Ingredient('Chicken', 200), new Ingredient('Tomato', 4)]
-    ),
-    new Recipe(
-      'Delicious Lasagna',
-      'Test lasagna',
-      'https://static01.nyt.com/images/2015/10/15/dining/15RECIPE20DIN/15RECIPE20DIN-articleLarge.jpg',
-      [new Ingredient('Meat', 100), new Ingredient('Tomato', 7)]
-    ),
-    new Recipe(
-      'Skillet Chicken and Quinoa with Fresh Salsa',
-      'A filling and fresh dish. Topping with the homemade salsa is a must!',
-      'http://images.media-allrecipes.com/userphotos/720x405/4535588.jpg',
-      [new Ingredient('Chicken', 200), new Ingredient('Tomato', 4)]
-    ),
-    new Recipe(
-      'Delicious Lasagna',
-      'Test lasagna',
-      'https://static01.nyt.com/images/2015/10/15/dining/15RECIPE20DIN/15RECIPE20DIN-articleLarge.jpg',
-      [new Ingredient('Meat', 100), new Ingredient('Tomato', 7)]
-    ),
-    new Recipe(
-      'Skillet Chicken and Quinoa with Fresh Salsa',
-      'A filling and fresh dish. Topping with the homemade salsa is a must!',
-      'http://images.media-allrecipes.com/userphotos/720x405/4535588.jpg',
-      [new Ingredient('Chicken', 200), new Ingredient('Tomato', 4)]
-    ),
-    new Recipe(
-      'Delicious Lasagna',
-      'Test lasagna',
-      'https://static01.nyt.com/images/2015/10/15/dining/15RECIPE20DIN/15RECIPE20DIN-articleLarge.jpg',
-      [new Ingredient('Meat', 100), new Ingredient('Tomato', 7)]
-    ),
-    new Recipe(
-      'Skillet Chicken and Quinoa with Fresh Salsa',
-      'A filling and fresh dish. Topping with the homemade salsa is a must!',
-      'http://images.media-allrecipes.com/userphotos/720x405/4535588.jpg',
-      [new Ingredient('Chicken', 200), new Ingredient('Tomato', 4)]
-    ),
-    new Recipe(
-      'Delicious Lasagna',
-      'Test lasagna',
-      'https://static01.nyt.com/images/2015/10/15/dining/15RECIPE20DIN/15RECIPE20DIN-articleLarge.jpg',
-      [new Ingredient('Meat', 100), new Ingredient('Tomato', 7)]
-    ),
-    new Recipe(
-      'Skillet Chicken and Quinoa with Fresh Salsa',
-      'A filling and fresh dish. Topping with the homemade salsa is a must!',
-      'http://images.media-allrecipes.com/userphotos/720x405/4535588.jpg',
-      [new Ingredient('Chicken', 200), new Ingredient('Tomato', 4)]
-    ),
-    new Recipe(
-      'Delicious Lasagna',
-      'Test lasagna',
-      'https://static01.nyt.com/images/2015/10/15/dining/15RECIPE20DIN/15RECIPE20DIN-articleLarge.jpg',
-      [new Ingredient('Meat', 100), new Ingredient('Tomato', 7)]
-    ),
-    new Recipe(
-      'Skillet Chicken and Quinoa with Fresh Salsa',
-      'A filling and fresh dish. Topping with the homemade salsa is a must!',
-      'http://images.media-allrecipes.com/userphotos/720x405/4535588.jpg',
-      [new Ingredient('Chicken', 200), new Ingredient('Tomato', 4)]
-    ),
-    new Recipe(
-      'Delicious Lasagna',
-      'Test lasagna',
-      'https://static01.nyt.com/images/2015/10/15/dining/15RECIPE20DIN/15RECIPE20DIN-articleLarge.jpg',
-      [new Ingredient('Meat', 100), new Ingredient('Tomato', 7)]
-    )
-  ];
+  private currentUserEmail: string;
+  private recipes: Recipe[] = [];
 
+  constructor(
+    private httpClient: HttpClient,
+    private authService: AuthService
+  ){
+    this.currentUserEmail = "test@test.com";
+  }
+  
   getRecipes() {
     return this.recipes.slice(); //Returns a copy, to avoid giving direct access
   }
@@ -176,8 +64,10 @@ export class RecipeService{
     //const token = await this.authService.getToken();
     
     // this.httpClient.get<Recipe[]>("https://ng-recipes-1sv94.firebaseio.com/recipes.json?auth=" + token)
+    console.log("Fetching data");
     this.httpClient.get<Recipe[]>("https://ng-recipes-1sv94.firebaseio.com/recipes.json")
     .map(recipes => {
+      console.log("Data:", recipes);
       for (let recipe of recipes){
         recipe.ingredients = recipe.ingredients || []; //Adds ingredients property if not present
       }

@@ -47,12 +47,13 @@
       <li routerLinkActive="active"><a routerLink="/shopping-list">Shopping List</a></li>
       <li>|</li>
 
-      <div *ngIf="!authService.isAuthenticated(); then loggedin else loggedout"></div>
-      <ng-template #loggedin>
+      <div *ngIf="!authService.isAuthenticated(); then loggedout else loggedin"></div>
+      <ng-template #loggedout>
         <li routerLinkActive="active"><a routerLink="/signup">Register</a></li>
         <li routerLinkActive="active"><a routerLink="/signin">Log In</a></li>
       </ng-template>
-      <ng-template #loggedout>
+      <ng-template #loggedin>
+        <li routerLinkActive="active"><a class="clickable" (click)="onSaveData()">Save Recipes</a></li>
         <li routerLinkActive="active"><a class="clickable" (click)="onLogout()">Log Out</a></li>
       </ng-template>
     </ul>
