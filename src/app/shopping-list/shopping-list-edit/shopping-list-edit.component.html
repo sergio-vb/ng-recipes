@@ -3,7 +3,7 @@
     <p class="description">Add a new ingredient here, or click an item from the shopping list below to edit it here.</p>
     <form [formGroup]="ingredientForm" (ngSubmit)="onAddItem()">
       <div class="row">
-        <div class="col s5 input-field">
+        <div class="col s5 input-field ingredient-name">
           <label for="name" [ngClass]="{active: editMode}">Name</label>
           <input 
             class="form-control validate"
@@ -12,7 +12,7 @@
             type="text" 
           >
         </div>
-        <div class="col s1 input-field">
+        <div class="col s1 input-field ingredient-amount">
           <label for="amount" [ngClass]="{active: editMode}">Amount</label>
           <input 
             class="form-control validate"
