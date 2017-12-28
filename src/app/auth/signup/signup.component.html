@@ -15,6 +15,7 @@
                   required
                   email
                   #email="ngModel"
+                  [ngClass]="{invalid: (!email.valid && email.touched)}"
                 >
                 <label for="email">Email</label>
                 <div *ngIf="!email.valid && email.touched" class="error">Please enter a valid email address.</div>
@@ -31,6 +32,7 @@
                   required
                   minlength="6"
                   #password="ngModel"
+                  [ngClass]="{invalid: (!password.valid && password.touched)}"
                 >
                 <label for="password">Password</label>
                 <div *ngIf="!password.valid && password.touched" class="error">Invalid password, must be 6 characters long or more.</div>
@@ -47,6 +49,7 @@
                     required
                     minlength="6"
                     #passwordConfirmation="ngModel"
+                    [ngClass]="{invalid: (!passwordConfirmation.valid && passwordConfirmation.touched)}"
                   >
                   <label for="password-confirmation">Password Confirmation</label>
                   <div *ngIf="!passwordConfirmation.valid && passwordConfirmation.touched" class="error">Password confirmation doesn't match.</div>

@@ -24,7 +24,7 @@
           <div class="row">
             <div class="input-field">
               <input 
-                class="form-control validate" 
+                class="form-control" 
                 type="password" 
                 id="password" 
                 name="password" 
@@ -32,6 +32,7 @@
                 required
                 minlength="6"
                 #password="ngModel"
+                [ngClass]="{invalid: (!password.valid && password.touched)}"
               >
               <label for="password">Password</label>
               <div *ngIf="!password.valid && password.touched" class="error">Invalid password, must be 6 characters long or more.</div>
