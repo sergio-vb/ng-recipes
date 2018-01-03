@@ -9,17 +9,15 @@ export class AuthService {
 
     constructor(private router: Router){}
 
-    signupUser(email: string, password: string){
-        firebase.auth().createUserWithEmailAndPassword(email, password)
-            .then(
-                success => {
-                    console.log("User created successfully");
-                    this.userEmail = email;
-                }
-            )
-            .catch(
-                error => console.log(error)
-            )
+    async signupUser(email: string, password: string){
+        try{
+            const signUpResult = await firebase.auth().createUserWithEmailAndPassword(email, password);
+            this.token = signUpResult.pa;
+            this.userEmail = email;
+            this.router.navigate(['/']);
+        }catch(error){
+            console.log(error);
+        }
     }
 
     // Example method using promises:
@@ -42,17 +40,17 @@ export class AuthService {
     async loginUser(email: string, password: string){
         try{
             const response = await firebase.auth().signInWithEmailAndPassword(email, password);
+            this.token = response.pa;
             this.userEmail = email;
             this.router.navigate(['/']);
         }catch(error){
             console.log(error);
             return;
         }
-        this.token = await firebase.auth().currentUser.getToken();
     }
 
     getToken(){
-        firebase.auth().currentUser.getToken().then(token => {
+        firebase.auth().currentUser.getIdToken().then(token => {
             this.token = token;
         });
         return this.token;
@@ -66,5 +64,6 @@ export class AuthService {
         firebase.auth().signOut();
         this.userEmail = "";
         this.token = null;
+        this.router.navigate(['/']);
     }
 }
