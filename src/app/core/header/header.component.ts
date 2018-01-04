@@ -13,12 +13,6 @@ export class HeaderComponent{
     private authService: AuthService
   ){}
 
-  onSaveData(){
-    this.recipeService.storeRecipes();
-  }
-  onFetchData(){
-    this.recipeService.getRecipes();
-  }
   onLogout(){
     this.authService.logoutUser();
   }

@@ -4,7 +4,7 @@ import * as firebase from 'firebase';
 
 @Injectable()
 export class AuthService {
-    token: string;
+    private token: string;
     private userEmail: string;
 
     constructor(private router: Router){}
@@ -65,5 +65,9 @@ export class AuthService {
         this.userEmail = "";
         this.token = null;
         this.router.navigate(['/']);
+    }
+
+    getUserEmail(){
+        return this.userEmail;
     }
 }

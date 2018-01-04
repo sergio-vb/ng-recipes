@@ -7,15 +7,17 @@ import * as firebase from 'firebase';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  activePage:string = "recipes";
   
   ngOnInit(){
-    firebase.initializeApp({
+    const config = {
       apiKey: "AIzaSyAPuNh-cpkl1VHSvu3uXxt3c87fcstMMsc",
       authDomain: "ng-recipes-1sv94.firebaseapp.com",
-    });
+      databaseURL: "https://ng-recipes-1sv94.firebaseio.com",
+      projectId: "ng-recipes-1sv94",
+      storageBucket: "ng-recipes-1sv94.appspot.com",
+      messagingSenderId: "413228234743"
+    };
+    firebase.initializeApp(config);
   }
-  onPageChange(data){
-    this.activePage = data.active;
-  }
+
 }

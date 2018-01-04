@@ -13,17 +13,13 @@ export class RecipeService {
   /* Firebase url: https://ng-recipes-1sv94.firebaseio.com/ */
 
   recipesUpdated = new Subject<Recipe[]>();
-  private currentUserEmail: string;
-  private recipes: Recipe[] = [];
-
+  
   constructor(
     private httpClient: HttpClient,
     private authService: AuthService
-  ){
-    this.currentUserEmail = "test@test.com";
-  }
+  ){ }
   
-  getRecipe(index) {
+  /*getRecipe(index) {
     return this.recipes[index];
   }
   addRecipe(recipe:Recipe){
@@ -37,9 +33,9 @@ export class RecipeService {
   deleteRecipe(index){
     // this.recipes.splice(index, 1);
     // this.recipesUpdated.next(this.getRecipes());    
-  }
+  }*/
   
-  async storeRecipes(){
+  /*async storeRecipes(){
     const req = new HttpRequest('PUT', 'https://ng-recipes-1sv94.firebaseio.com/recipes.json', this.recipes, {
       reportProgress: true
     });
@@ -48,17 +44,26 @@ export class RecipeService {
       response => console.log(response),
       error => console.log(error)
     );
-  }
+  }*/
 
+  
+
+  //CRUD recipe operations:
   getRecipes(){
     return this.httpClient.get<Recipe[]>("https://ng-recipes-1sv94.firebaseio.com/recipes.json")
       .map(recipes => {
         for (let recipe of recipes){
           recipe.ingredients = recipe.ingredients || []; //Adds ingredients property if not present
         }
-        this.recipes = recipes;
         return recipes;
       }).toPromise();
   }
+  getRecipe(id: number){
+    let recipe:Recipe;
+    return recipe;
+  }
+  addRecipe(recipe: Recipe){}
+  updateRecipe(id: number, recipe: Recipe){}
+  deleteRecipe(id: number){}
 
 }
