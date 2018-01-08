@@ -2,9 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { FormGroup, FormControl, FormArray, Validators } from '@angular/forms';
 
-import { RecipeService } from '../recipe.service';
 import { Recipe } from '../recipe.model';
 import { Ingredient } from '../../shared/ingredient.model';
+
+import { RecipeService } from '../recipe.service';
+import { AuthService } from '../../auth/auth.service';
 
 @Component({
   selector: 'app-recipe-edit',
@@ -19,7 +21,8 @@ export class RecipeEditComponent implements OnInit {
   constructor(
     private router: Router,
     private activatedRoute: ActivatedRoute,
-    private recipeService: RecipeService
+    private recipeService: RecipeService,
+    private authService: AuthService
   ) {}
 
   ngOnInit() {
@@ -57,14 +60,14 @@ export class RecipeEditComponent implements OnInit {
       recipeDescription = recipe.description;
 
       //Check if the recipe has ingredients (they are optional) and push them to the corresponding FormArray
-      if (recipe.ingredients){
-        for (let ingredient of recipe.ingredients){
-          recipeIngredients.push(new FormGroup({
-            'name': new FormControl(ingredient.name, Validators.required),
-            'amount': new FormControl(ingredient.amount, [Validators.required, Validators.pattern(/^[1-9]+[0-9]*$/)])
-          }));
-        }
-      }
+      // if (recipe.ingredients){
+      //   for (let ingredient of recipe.ingredients){
+      //     recipeIngredients.push(new FormGroup({
+      //       'name': new FormControl(ingredient.name, Validators.required),
+      //       'amount': new FormControl(ingredient.amount, [Validators.required, Validators.pattern(/^[1-9]+[0-9]*$/)])
+      //     }));
+      //   }
+      // }
     }
 
     this.recipeForm = new FormGroup({
@@ -76,18 +79,19 @@ export class RecipeEditComponent implements OnInit {
   }
 
   onSubmit(){
-    /*const formValues = this.recipeForm.value;
+    const formValues = this.recipeForm.value;
     const recipe = new Recipe(
+      this.authService.getUserId(),
       formValues.name, 
       formValues.description, 
-      formValues.imagePath, 
-      formValues.ingredients
-    );*/
+      formValues.imagePath
+    );
 
     if (this.editMode){
       this.recipeService.updateRecipe(this.id, this.recipeForm.value);
     }else{
-      this.recipeService.addRecipe(this.recipeForm.value);
+      console.log("Will add recipe:", recipe);
+      this.recipeService.addRecipe(recipe);
     }
     this.router.navigate(['../'], {relativeTo: this.activatedRoute});    
   }

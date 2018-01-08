@@ -50,19 +50,16 @@ export class RecipeService {
 
   //CRUD recipe operations:
   getRecipes(){
-    return this.httpClient.get<Recipe[]>("https://ng-recipes-1sv94.firebaseio.com/recipes.json")
-      .map(recipes => {
-        for (let recipe of recipes){
-          recipe.ingredients = recipe.ingredients || []; //Adds ingredients property if not present
-        }
-        return recipes;
-      }).toPromise();
+    return this.httpClient.get("https://ng-recipes-1sv94.firebaseio.com/recipes.json");
   }
   getRecipe(id: number){
     let recipe:Recipe;
     return recipe;
   }
-  addRecipe(recipe: Recipe){}
+  addRecipe(recipe: Recipe){
+    console.log("addRecipe recipe:", recipe);
+    return this.httpClient.post("https://ng-recipes-1sv94.firebaseio.com/recipes.json", recipe);
+  }
   updateRecipe(id: number, recipe: Recipe){}
   deleteRecipe(id: number){}
 

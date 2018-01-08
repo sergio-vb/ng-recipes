@@ -6,6 +6,7 @@ import * as firebase from 'firebase';
 export class AuthService {
     private token: string;
     private userEmail: string;
+    private userId: string;
 
     constructor(private router: Router){}
 
@@ -40,6 +41,8 @@ export class AuthService {
     async loginUser(email: string, password: string){
         try{
             const response = await firebase.auth().signInWithEmailAndPassword(email, password);
+            console.log("Login response:", response);
+            this.userId = response.uid;
             this.token = response.pa;
             this.userEmail = email;
             this.router.navigate(['/']);
@@ -64,10 +67,15 @@ export class AuthService {
         firebase.auth().signOut();
         this.userEmail = "";
         this.token = null;
+        this.userId = "";
         this.router.navigate(['/']);
     }
 
     getUserEmail(){
         return this.userEmail;
+    }
+
+    getUserId(){
+        return this.userId;
     }
 }
