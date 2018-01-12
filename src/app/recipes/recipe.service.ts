@@ -49,17 +49,22 @@ export class RecipeService {
   
 
   //CRUD recipe operations:
-  getRecipes(){
+  getRecipes(){ //Done
     return this.httpClient.get("https://ng-recipes-1sv94.firebaseio.com/recipes.json");
   }
-  getRecipe(id: number){
+  getRecipe(id: number){ //Pending
     let recipe:Recipe;
     return recipe;
   }
-  addRecipe(recipe: Recipe){
-    console.log("addRecipe recipe:", recipe);
-    return this.httpClient.post("https://ng-recipes-1sv94.firebaseio.com/recipes.json", recipe);
+  addRecipe(recipe: Recipe, ingredients: Ingredient[]){
+    return this.httpClient.post("https://ng-recipes-1sv94.firebaseio.com/recipes.json", recipe).mergeMap((response:any) => {
+      //If successful, create ingredients under the new recipe id  
+      if (response.name){
+        return this.httpClient.put(`https://ng-recipes-1sv94.firebaseio.com/ingredients/${response.name}.json`, ingredients);
+      }
+    });
   }
+
   updateRecipe(id: number, recipe: Recipe){}
   deleteRecipe(id: number){}
 

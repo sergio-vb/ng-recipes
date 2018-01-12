@@ -88,11 +88,16 @@ export class RecipeEditComponent implements OnInit {
       formValues.imagePath
     );
 
+    //Converts array to normalized object
+    const ingredients = formValues.ingredients.reduce((obj, current) => {
+      obj[current.name] = current;
+      return obj;
+    }, {});
+
     if (this.editMode){
       this.recipeService.updateRecipe(this.id, this.recipeForm.value);
     }else{
-      console.log("Will add recipe:", recipe);
-      this.recipeService.addRecipe(recipe).subscribe( (response) => {
+      this.recipeService.addRecipe(recipe, ingredients).subscribe( (response) => {
         console.log("AddRecipe response:", response);
       });
     }
