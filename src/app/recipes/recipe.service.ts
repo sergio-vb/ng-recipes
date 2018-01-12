@@ -63,4 +63,11 @@ export class RecipeService {
   updateRecipe(id: number, recipe: Recipe){}
   deleteRecipe(id: number){}
 
+  slugify(text: string){
+    return text
+      .toLowerCase()
+      .replace(/[^\w ]+/g,'')
+      .replace(/ +/g,'-');
+  }
+
 }

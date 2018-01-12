@@ -83,6 +83,7 @@ export class RecipeEditComponent implements OnInit {
     const recipe = new Recipe(
       this.authService.getUserId(),
       formValues.name, 
+      this.recipeService.slugify(formValues.name),
       formValues.description, 
       formValues.imagePath
     );
@@ -91,7 +92,9 @@ export class RecipeEditComponent implements OnInit {
       this.recipeService.updateRecipe(this.id, this.recipeForm.value);
     }else{
       console.log("Will add recipe:", recipe);
-      this.recipeService.addRecipe(recipe);
+      this.recipeService.addRecipe(recipe).subscribe( (response) => {
+        console.log("AddRecipe response:", response);
+      });
     }
     this.router.navigate(['../'], {relativeTo: this.activatedRoute});    
   }
