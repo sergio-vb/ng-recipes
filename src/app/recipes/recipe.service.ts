@@ -49,18 +49,17 @@ export class RecipeService {
   
 
   //CRUD recipe operations:
-  getRecipes(){ //Done
-    return this.httpClient.get("https://ng-recipes-1sv94.firebaseio.com/recipes.json");
+  getRecipes(){
+    return this.httpClient.get("https://ng-recipes-1sv94.firebaseio.com/recipes/byId.json");
   }
-  getRecipe(id: number){ //Pending
-    let recipe:Recipe;
-    return recipe;
+  getRecipe(id: string){
+    return this.httpClient.get(`https://ng-recipes-1sv94.firebaseio.com/recipes/byId/${id}.json`)
   }
   addRecipe(recipe: Recipe, ingredients: Ingredient[]){
-    return this.httpClient.post("https://ng-recipes-1sv94.firebaseio.com/recipes.json", recipe).mergeMap((response:any) => {
+    return this.httpClient.post("https://ng-recipes-1sv94.firebaseio.com/recipes/byId.json", recipe).flatMap((response:any) => {
       //If successful, create ingredients under the new recipe id  
       if (response.name){
-        return this.httpClient.put(`https://ng-recipes-1sv94.firebaseio.com/ingredients/${response.name}.json`, ingredients);
+        return this.httpClient.put(`https://ng-recipes-1sv94.firebaseio.com/recipeIngredients/byRecipeId/${response.name}.json`, ingredients);
       }
     });
   }
@@ -73,6 +72,10 @@ export class RecipeService {
       .toLowerCase()
       .replace(/[^\w ]+/g,'')
       .replace(/ +/g,'-');
+  }
+
+  getRecipeIngredients(id: string){
+    return this.httpClient.get(`https://ng-recipes-1sv94.firebaseio.com/recipeIngredients/byRecipeId/${id}.json`);   
   }
 
 }

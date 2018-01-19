@@ -2,10 +2,10 @@
 <p class="list-subtitle">Latest Recipes:</p>
 <div class="collection">
     <a app-recipe-item 
-        *ngFor="let recipeElement of recipes; let i = index" 
+        *ngFor="let recipeElement of recipes" 
         [recipe]="recipeElement" 
+        [routerLink]="[recipeElement.id, recipeElement.slug]"
         class="collection-item avatar"
-        [routerLink]="i"
         routerLinkActive="active"
     ></a>
 </div>

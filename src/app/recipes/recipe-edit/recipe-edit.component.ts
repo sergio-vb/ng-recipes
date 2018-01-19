@@ -53,11 +53,11 @@ export class RecipeEditComponent implements OnInit {
 
     //If editing an existing recipe, overwrite default values
     if (this.editMode){
-      const recipe = this.recipeService.getRecipe(this.id);
+      // const recipe = this.recipeService.getRecipe(this.id);
       
-      recipeName = recipe.name;
-      recipeImagePath = recipe.imagePath;
-      recipeDescription = recipe.description;
+      // recipeName = recipe.name;
+      // recipeImagePath = recipe.imagePath;
+      // recipeDescription = recipe.description;
 
       //Check if the recipe has ingredients (they are optional) and push them to the corresponding FormArray
       // if (recipe.ingredients){

@@ -20,6 +20,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     this.recipeService.getRecipes().subscribe(
       recipes => {
         for (let id in recipes){
+          recipes[id].id = id; //Adding an id property to each recipe object
           this.recipes.push(recipes[id]);
         }
       }
@@ -27,6 +28,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
 
     this.recipeSubscription = this.recipeService.recipesUpdated.subscribe(
       (recipes: Recipe[]) => {
+        //Remember to clean recipes array if appropriate
         this.recipes = recipes;
       }
     );
