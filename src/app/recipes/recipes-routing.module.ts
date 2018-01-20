@@ -12,8 +12,7 @@ import { RoleGuard } from '../auth/role-guard.service';
 const routes: Routes = [
     { path: '', component: RecipesComponent, children: [
         { path: '', component: RecipeDefaultComponent},
-        // { path: 'new', component: RecipeEditComponent, canActivate: [AuthGuard]},
-        { path: 'new', component: RecipeEditComponent},
+        { path: 'new', component: RecipeEditComponent, canActivate: [AuthGuard]},
         { path: ':id/:slug', component: RecipeDetailComponent},
         { path: ':id/:slug/edit', component: RecipeEditComponent, canActivate: [RoleGuard]}
     ]}

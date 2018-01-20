@@ -14,14 +14,12 @@ export class RoleGuard implements CanActivate{
 
     async canActivate(activatedRouteSnapshot: ActivatedRouteSnapshot, routerStateSnapshot: RouterStateSnapshot){
         if (!this.authService.isAuthenticated()){
-            console.log("User not authenticated.");
             this.router.navigate(['/signin']);
             return false;
         }
         const result = await this.recipeService.doesUserOwnRecipe(activatedRouteSnapshot.params.id);
         if (!result){
-            console.log("User does not own recipe.");
-            this.router.navigate(['/notauthorized']);
+            this.router.navigate(['/unauthorized']);
         }
         return result;
         
