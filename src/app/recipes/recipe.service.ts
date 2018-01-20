@@ -78,4 +78,9 @@ export class RecipeService {
     return this.httpClient.get(`https://ng-recipes-1sv94.firebaseio.com/recipeIngredients/byRecipeId/${id}.json`);   
   }
 
+  async doesUserOwnRecipe(recipeId: string): Promise<boolean>{
+    const recipe:any = await this.getRecipe(recipeId).toPromise();
+    return (recipe.ownerId && (recipe.ownerId === this.authService.getUserId())); //Edge case: Should not return true if both are undefined
+  }
+
 }
