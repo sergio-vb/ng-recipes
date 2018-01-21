@@ -11,8 +11,8 @@
         <!-- Dropdown Structure -->
         <ul id="dropdown1" class="dropdown-content">
           <li><a class="clickable" (click)="onAddToShoppingList()">To Shopping List</a></li>
-          <li><a class="clickable" routerLink="edit">Edit Recipe</a></li>
-          <li><a class="clickable" (click)="onDeleteRecipe()">Delete Recipe</a></li>
+          <li *ngIf="userOwnsRecipe"><a class="clickable" routerLink="edit">Edit Recipe</a></li>
+          <li *ngIf="userOwnsRecipe"><a class="clickable" (click)="onDeleteRecipe()">Delete Recipe</a></li>
         </ul>
       </div>
       

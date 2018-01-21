@@ -1,13 +1,18 @@
 <div class="card-panel">
 
-    <h5 class="title">Enter your new recipe:</h5>
+    <div *ngIf="editMode; else newRecipeMessage">
+        <h5 class="title">Edit your recipe:</h5>
+    </div>
+    <ng-template #newRecipeMessage>
+        <h5 class="title">Enter your new recipe:</h5>
+    </ng-template>
 
     <form [formGroup]="recipeForm" (ngSubmit)="onSubmit()">
 
         <div class="row">
             <div class="col s12">
                 <div class="input-field">
-                    <label for="name">Recipe Title</label>
+                    <label for="name" [ngClass]="{'active': editMode }">Recipe Title</label>
                     <input type="text" id="name" class="form-control validate" formControlName="name">
                 </div>
             </div>
@@ -15,7 +20,7 @@
         <div class="row">
             <div class="col s12">
                 <div class="input-field">
-                    <label for="imagePath">Image URL</label>
+                    <label for="imagePath" [ngClass]="{'active': editMode }">Image URL</label>
                     <input type="text" id="imagePath" class="form-control validate" formControlName="imagePath" #imagePath>
                 </div>
             </div>
@@ -30,7 +35,7 @@
         <div class="row">
             <div class="col s12">
                 <div class="input-field">
-                    <label for="description">Description and Preparation</label>
+                    <label for="description" [ngClass]="{'active': editMode }">Description and Preparation</label>
                     <textarea type="text" id="description" class="form-control materialize-textarea" rows="6"  formControlName="description"></textarea>
                 </div>
             </div>
@@ -42,21 +47,21 @@
             <div class="col s12" formArrayName="ingredients">
                 <div class="ingredients-wrapper">
                     <div class="row ingredients-header">
-                        <div class="col s6">Ingredient name</div>
-                        <div class="col s1">Amount</div>
+                        <div class="col s9">Ingredient name</div>
+                        <div class="col s2">Amount</div>
                     </div>
                     <div 
                         class="row ingredient-row" 
                         *ngFor="let ingredientCrl of recipeForm.get('ingredients').controls; let i = index"
                         [formGroupName]="i"
                     >
-                        <div class="col s6">
+                        <div class="col s9">
                             <input 
                                 type="text" 
                                 class="form-control validate" 
                                 formControlName="name">
                         </div>
-                        <div class="col s1">
+                        <div class="col s2">
                             <input 
                                 type="number" 
                                 class="form-control validate"

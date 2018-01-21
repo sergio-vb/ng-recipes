@@ -15,6 +15,7 @@ export class RecipeDetailComponent implements OnInit {
   recipe: Recipe;
   ingredients: Ingredient[];
   id: string;
+  userOwnsRecipe: boolean;
 
   constructor(
     private shoppingListService: ShoppingListService,
@@ -42,6 +43,8 @@ export class RecipeDetailComponent implements OnInit {
             }
           }
         );
+
+        this.recipeService.doesUserOwnRecipe(this.id).then(result => this.userOwnsRecipe = result);
       }
     );
   }
