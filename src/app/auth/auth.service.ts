@@ -12,7 +12,6 @@ export class AuthService {
     init(){
         firebase.auth().onAuthStateChanged(
             (user:any) => {
-                console.log("AuthStateChanged:", user);
                 this.token = user ? user.pa : "";
                 this.userId = user ? user.uid : "";
             }

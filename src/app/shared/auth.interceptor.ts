@@ -10,7 +10,7 @@ export class AuthInterceptor implements HttpInterceptor{
     
     //Add an auth token to any request if the token is available (it's optional, since it's not needed for reading recipes)
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>>{
-        console.log('Intercepted request: ', req);
+        //console.log('Intercepted request: ', req);
         let token;
         try{
             token = this.authService.getToken();
