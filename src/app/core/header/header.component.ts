@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { RecipeService } from '../../recipes/recipe.service';
+import { Component, OnInit } from '@angular/core';
+
 import { AuthService } from '../../auth/auth.service';
 
 @Component({
@@ -7,13 +7,16 @@ import { AuthService } from '../../auth/auth.service';
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss']
 })
-export class HeaderComponent{
+export class HeaderComponent {
   constructor(
-    private recipeService: RecipeService,
     private authService: AuthService
   ){}
 
   onLogout(){
     this.authService.logoutUser();
+  }
+
+  isAuthenticated(){
+    return this.authService.isAuthenticated();
   }
 }

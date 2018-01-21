@@ -13,9 +13,10 @@ export class AuthInterceptor implements HttpInterceptor{
         console.log('Intercepted request: ', req);
         let token;
         try{
-            token = this.authService.getToken(); //AuthService might not be defined on app load
+            token = this.authService.getToken();
         }catch(e){
             token = '';
+            console.log("Error:", e);
         }
 
         let request;
