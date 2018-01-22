@@ -17,7 +17,7 @@ export class RoleGuard implements CanActivate{
             this.router.navigate(['/signin']);
             return false;
         }
-        const result = await this.recipeService.doesUserOwnRecipe(activatedRouteSnapshot.params.id);
+        const result = await this.recipeService.doesUserOwnRecipe(activatedRouteSnapshot.params.id, null);
         if (!result){
             this.router.navigate(['/unauthorized']);
         }

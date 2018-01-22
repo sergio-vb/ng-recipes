@@ -1,10 +1,11 @@
 import { Component, OnInit} from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 
-import { Recipe } from '../recipe.model';
-import { ShoppingListService } from '../../shopping-list/shopping-list.service';
-import { RecipeService } from '../recipe.service';
 import { Ingredient } from '../../shared/ingredient.model';
+import { Recipe } from '../recipe.model';
+
+import { RecipeService } from '../recipe.service';
+import { ShoppingListService } from '../../shopping-list/shopping-list.service';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -12,41 +13,45 @@ import { Ingredient } from '../../shared/ingredient.model';
   styleUrls: ['./recipe-detail.component.scss']
 })
 export class RecipeDetailComponent implements OnInit {
-  recipe: Recipe;
-  ingredients: Ingredient[];
   id: string;
+  ingredients: Ingredient[];
+  recipe: Recipe;
   userOwnsRecipe: boolean;
 
   constructor(
-    private shoppingListService: ShoppingListService,
-    private recipeService: RecipeService,
     private activatedRoute: ActivatedRoute,
-    private router: Router
+    private recipeService: RecipeService,
+    private router: Router,
+    private shoppingListService: ShoppingListService
   ) {}
 
   ngOnInit() {
 
     this.activatedRoute.params.subscribe(
-      (params:Params) => {
+      async (params:Params) => {
         this.id = params.id;
-        this.recipeService.getRecipe(this.id).subscribe(
-          (recipe: Recipe) => {
-            this.recipe = recipe;
-          }
-        );
 
-        this.ingredients = [];
-        this.recipeService.getRecipeIngredients(this.id).subscribe(
-          (ingredients) => {
-            for (let id in ingredients){
-              this.ingredients.push(ingredients[id]);
-            }
+        this.recipe = <Recipe> await this.recipeService.getRecipe(this.id).toPromise();
+        
+        //If recipe doesn't exist, redirect to recipes home
+        if (this.recipe === null){
+          this.router.navigate(["/recipes"]);
+        }else{
+          
+          //Gets recipe ingredients
+          const ingredientsResponse = await this.recipeService.getRecipeIngredients(this.id).toPromise();
+          this.ingredients = [];
+          for (let id in ingredientsResponse){
+            this.ingredients.push(ingredientsResponse[id]);
           }
-        );
 
-        this.recipeService.doesUserOwnRecipe(this.id).then(result => this.userOwnsRecipe = result);
+          //Sets option to enable Edit and Delete if user is owner
+          this.userOwnsRecipe = await this.recipeService.doesUserOwnRecipe(this.id, this.recipe);
+        }
+
       }
     );
+
   }
 
   onAddToShoppingList() {
@@ -54,7 +59,10 @@ export class RecipeDetailComponent implements OnInit {
   }
 
   onDeleteRecipe(){
-    //this.recipeService.deleteRecipe(this.id);
-    //this.router.navigate(['../'], {relativeTo: this.activatedRoute});
+    this.recipeService.deleteRecipe(this.id).subscribe(
+      response => {
+        this.router.navigate(['../../'], {relativeTo: this.activatedRoute});
+      }
+    );
   }
 }

@@ -77,7 +77,11 @@ export class RecipeService {
       }
     });
   }
-  deleteRecipe(id: number){}
+  deleteRecipe(id: string){
+    return this.httpClient.delete(`https://ng-recipes-1sv94.firebaseio.com/recipes/byId/${id}.json`).flatMap((response:any) => {
+      return this.httpClient.delete(`https://ng-recipes-1sv94.firebaseio.com/recipeIngredients/byRecipeId/${id}.json`);
+    });
+  }
 
   slugify(text: string){
     return text
@@ -90,8 +94,13 @@ export class RecipeService {
     return this.httpClient.get(`https://ng-recipes-1sv94.firebaseio.com/recipeIngredients/byRecipeId/${id}.json`);   
   }
 
-  async doesUserOwnRecipe(recipeId: string): Promise<boolean>{
-    const recipe:any = await this.getRecipe(recipeId).toPromise();
+  //Checks if a recipe belongs to the current user.
+  //Optionally receives the recipe object, otherwise it will get it through an http request
+  async doesUserOwnRecipe(recipeId: string, recipeParam: any): Promise<boolean>{
+    const recipe = recipeParam || await this.getRecipe(recipeId).toPromise();
+    if (!recipe){ //Recipe doesn't exist
+      return false;
+    }
     return (recipe.ownerId && (recipe.ownerId === this.authService.getUserId())); //Edge case: Should not return true if both are undefined
   }
 
