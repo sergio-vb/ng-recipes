@@ -59,7 +59,10 @@ export class RecipeService {
     return this.httpClient.post("https://ng-recipes-1sv94.firebaseio.com/recipes/byId.json", recipe).flatMap((response:any) => {
       //If successful, create ingredients under the new recipe id  
       if (response.name){
-        return this.httpClient.put(`https://ng-recipes-1sv94.firebaseio.com/recipeIngredients/byRecipeId/${response.name}.json`, ingredients);
+        return this.httpClient.put(`https://ng-recipes-1sv94.firebaseio.com/recipeIngredients/byRecipeId/${response.name}.json`, ingredients).map((response:any) => {
+          this.recipesUpdated.next();
+          return response;
+        });
       }
     });
   }
@@ -67,7 +70,10 @@ export class RecipeService {
   updateRecipe(id: string, recipe: Recipe, ingredients: Ingredient[]){
     return this.httpClient.put(`https://ng-recipes-1sv94.firebaseio.com/recipes/byId/${id}.json`, recipe).flatMap((response:any) => {
       if (response.name){
-        return this.httpClient.put(`https://ng-recipes-1sv94.firebaseio.com/recipeIngredients/byRecipeId/${id}.json`, ingredients);
+        return this.httpClient.put(`https://ng-recipes-1sv94.firebaseio.com/recipeIngredients/byRecipeId/${id}.json`, ingredients).map((response:any) => {
+          this.recipesUpdated.next();
+          return response;
+        });
       }
     });
   }

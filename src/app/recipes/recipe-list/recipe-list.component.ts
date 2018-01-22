@@ -16,6 +16,20 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   constructor(private recipeService: RecipeService) {}
 
   ngOnInit() {
+    this.getRecipes();
+
+    this.recipeSubscription = this.recipeService.recipesUpdated.subscribe(
+      (res) => {
+        this.getRecipes();
+      }
+    );
+  }
+
+  ngOnDestroy() {
+    this.recipeSubscription.unsubscribe();
+  }
+
+  getRecipes(){
     this.recipes = [];
     this.recipeService.getRecipes().subscribe(
       recipes => {
@@ -25,16 +39,5 @@ export class RecipeListComponent implements OnInit, OnDestroy {
         }
       }
     );
-
-    this.recipeSubscription = this.recipeService.recipesUpdated.subscribe(
-      (recipes: Recipe[]) => {
-        //Remember to clean recipes array if appropriate
-        this.recipes = recipes;
-      }
-    );
-  }
-
-  ngOnDestroy() {
-    this.recipeSubscription.unsubscribe();
   }
 }
