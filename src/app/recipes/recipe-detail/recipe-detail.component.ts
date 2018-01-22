@@ -13,6 +13,7 @@ import { ShoppingListService } from '../../shopping-list/shopping-list.service';
   styleUrls: ['./recipe-detail.component.scss']
 })
 export class RecipeDetailComponent implements OnInit {
+  error: any;
   id: string;
   ingredients: Ingredient[];
   recipe: Recipe;
@@ -30,23 +31,29 @@ export class RecipeDetailComponent implements OnInit {
     this.activatedRoute.params.subscribe(
       async (params:Params) => {
         this.id = params.id;
+        this.error = "";
 
-        this.recipe = <Recipe> await this.recipeService.getRecipe(this.id).toPromise();
-        
-        //If recipe doesn't exist, redirect to recipes home
-        if (this.recipe === null){
-          this.router.navigate(["/recipes"]);
-        }else{
+        try{
+          this.recipe = <Recipe> await this.recipeService.getRecipe(this.id).toPromise();
           
-          //Gets recipe ingredients
-          const ingredientsResponse = await this.recipeService.getRecipeIngredients(this.id).toPromise();
-          this.ingredients = [];
-          for (let id in ingredientsResponse){
-            this.ingredients.push(ingredientsResponse[id]);
+          //If recipe doesn't exist, redirect to recipes home
+          if (this.recipe === null){
+            this.router.navigate(["/recipes"]);
+          }else{
+            
+            //Gets recipe ingredients
+            const ingredientsResponse = await this.recipeService.getRecipeIngredients(this.id).toPromise();
+            this.ingredients = [];
+            for (let id in ingredientsResponse){
+              this.ingredients.push(ingredientsResponse[id]);
+            }
+
+            //Sets option to enable Edit and Delete if user is owner
+            this.userOwnsRecipe = await this.recipeService.doesUserOwnRecipe(this.id, this.recipe);
           }
 
-          //Sets option to enable Edit and Delete if user is owner
-          this.userOwnsRecipe = await this.recipeService.doesUserOwnRecipe(this.id, this.recipe);
+        }catch(error){
+          this.errorHandling(error);
         }
 
       }
@@ -64,5 +71,9 @@ export class RecipeDetailComponent implements OnInit {
         this.router.navigate(['../../'], {relativeTo: this.activatedRoute});
       }
     );
+  }
+  errorHandling(error){
+    this.error = error;
+    console.log("Error:", error);
   }
 }

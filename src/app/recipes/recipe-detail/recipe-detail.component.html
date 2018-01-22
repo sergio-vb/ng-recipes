@@ -1,5 +1,5 @@
 <div class="card">
-  <ng-container *ngIf="recipe && ingredients">
+  <ng-container *ngIf="recipe && ingredients && !error">
     <div class="card-image">
       <img [src]="recipe.imagePath">
       <span class="card-title">{{recipe.name}}</span>
@@ -23,4 +23,7 @@
       </ul>
     </div>
   </ng-container>
+</div>
+<div *ngIf="error" class="container white-text">
+  <h5 class="title">Something went wrong, please try again.</h5>
 </div>
