@@ -44,11 +44,31 @@
     }
 
 }
-
 .recipe-description{
     clear: both;
 }
 .container{
     text-align: center;
     margin-top: 11%;
+}
+
+.confirmation-modal {
+    
+    display: none;
+    left: 50%;
+    position: absolute;
+    top: 40%;
+    transform: translateX(-50%);
+
+    &.active{
+        display: block;
+        z-index: 999;
+    }
+    
+    .card-panel{
+        text-align: center;
+    }
+    .warning{
+        background: #ff5252;
+    }
 }

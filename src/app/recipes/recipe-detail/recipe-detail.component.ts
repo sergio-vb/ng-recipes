@@ -18,6 +18,7 @@ export class RecipeDetailComponent implements OnInit {
   ingredients: Ingredient[];
   recipe: Recipe;
   userOwnsRecipe: boolean;
+  isConfirmationOpen: boolean;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -27,6 +28,8 @@ export class RecipeDetailComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+
+    this.isConfirmationOpen = false;
 
     this.activatedRoute.params.subscribe(
       async (params:Params) => {
@@ -76,4 +79,9 @@ export class RecipeDetailComponent implements OnInit {
     this.error = error;
     console.log("Error:", error);
   }
+
+  onToggleDeleteConfirmation(){
+    this.isConfirmationOpen = !this.isConfirmationOpen;
+  }
+  
 }
