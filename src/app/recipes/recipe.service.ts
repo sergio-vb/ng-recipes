@@ -79,7 +79,10 @@ export class RecipeService {
   }
   deleteRecipe(id: string){
     return this.httpClient.delete(`https://ng-recipes-1sv94.firebaseio.com/recipes/byId/${id}.json`).flatMap((response:any) => {
-      return this.httpClient.delete(`https://ng-recipes-1sv94.firebaseio.com/recipeIngredients/byRecipeId/${id}.json`);
+      return this.httpClient.delete(`https://ng-recipes-1sv94.firebaseio.com/recipeIngredients/byRecipeId/${id}.json`).map((response:any) => {
+        this.recipesUpdated.next();
+        return response;
+      });
     });
   }
 
