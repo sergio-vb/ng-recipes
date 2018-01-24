@@ -32,7 +32,7 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
       (index: number) => {
         this.editMode = true;
         this.editedItemIndex = index;
-        this.editedItem = this.shoppingListService.getIngredient(index);
+        this.editedItem = this.shoppingListService.getLocalIngredient(index);
         this.ingredientForm.setValue({
           ingredientName: this.editedItem.name,
           ingredientAmount: this.editedItem.amount
@@ -47,9 +47,9 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
       this.ingredientForm.controls.ingredientAmount.value
     );
     if (this.editMode){
-      this.shoppingListService.updateIngredient(this.editedItemIndex, newIngredient);
+      this.shoppingListService.updateLocalIngredient(this.editedItemIndex, newIngredient);
     }else{
-      this.shoppingListService.addIngredient(newIngredient);
+      this.shoppingListService.addLocalIngredient(newIngredient);
     }
     this.resetEditMode();
   }
@@ -58,7 +58,7 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
     this.resetEditMode();
   }
   onDeleteIngredient(){
-    this.shoppingListService.deleteIngredient(this.editedItemIndex);
+    this.shoppingListService.deleteLocalIngredient(this.editedItemIndex);
     this.resetEditMode();
   }
 

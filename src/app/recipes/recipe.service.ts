@@ -1,6 +1,6 @@
 import { Subject } from 'rxjs/Subject';
 import { HttpClient, HttpParams, HttpRequest } from '@angular/common/http';
-import { Injectable, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
 import 'rxjs';
 
 import { Recipe } from './recipe.model';

@@ -14,6 +14,7 @@ export class AuthService {
             (user:any) => {
                 this.token = user ? user.pa : "";
                 this.userId = user ? user.uid : "";
+                console.log("Auth state changed, userId:", this.userId);
             }
         );  
     }
