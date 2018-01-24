@@ -1,8 +1,13 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 
+import { ModalConfig } from '../../shared/modal-config.model';
 import { Recipe } from '../recipe.model';
+
+import { AuthService } from '../../auth/auth.service';
 import { RecipeService } from '../recipe.service';
+
 
 @Component({
   selector: 'app-recipe-list',
@@ -11,11 +16,29 @@ import { RecipeService } from '../recipe.service';
 })
 export class RecipeListComponent implements OnInit, OnDestroy {
   recipes: Recipe[];
-  private recipeSubscription: Subscription;
+  recipeSubscription: Subscription;
+  modalConfig: ModalConfig;
+  isModalOpen: boolean;
 
-  constructor(private recipeService: RecipeService) {}
+
+  constructor(
+    private activatedRoute: ActivatedRoute,
+    private authService: AuthService,
+    private recipeService: RecipeService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
+
+    this.isModalOpen = false;
+    this.modalConfig = {
+      mainText: "You need to log in or register to create a new recipe.",
+      leftButtonText: "Register",
+      rightButtonText: "Log In",
+      leftButtonStyles: "btn",
+      rightButtonStyles: "btn"
+    }
+
     this.getRecipes();
 
     this.recipeSubscription = this.recipeService.recipesUpdated.subscribe(
@@ -40,4 +63,20 @@ export class RecipeListComponent implements OnInit, OnDestroy {
       }
     );
   }
+
+  onNewRecipeClick(){
+    if (this.authService.isAuthenticated()){
+      this.router.navigate(['./new'], {relativeTo: this.activatedRoute});
+    }else{
+      this.isModalOpen = true;
+    }
+  }
+
+  onModalRegister(){
+    this.router.navigate(['/signup']);
+  }
+  onModalLogin(){
+    this.router.navigate(['/signin']);    
+  }
+
 }

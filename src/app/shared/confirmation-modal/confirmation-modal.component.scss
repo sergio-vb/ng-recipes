@@ -2,7 +2,7 @@
     
     display: none;
     left: 50%;
-    position: absolute;
+    position: fixed;
     top: 40%;
     transform: translateX(-50%);
 
@@ -12,11 +12,11 @@
     }
 
     .close{
+        background: white;
+        cursor: pointer;
         position: absolute;
         right: -0.4em;
         top: -0.1em;
-        background: white;
-        cursor: pointer;
     }
     
     .card-panel{

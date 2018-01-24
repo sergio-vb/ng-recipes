@@ -1,5 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
+import { ModalConfig } from '../modal-config.model';
+
 @Component({
   selector: 'app-confirmation-modal',
   templateUrl: './confirmation-modal.component.html',
@@ -7,7 +9,7 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 })
 export class ConfirmationModalComponent implements OnInit {
 
-  @Input() config: any;
+  @Input() config: ModalConfig;
   @Input() isVisible: boolean;
   @Output() isVisibleChange = new EventEmitter<boolean>();
   @Output() leftButtonClick = new EventEmitter();

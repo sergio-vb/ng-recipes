@@ -1,4 +1,4 @@
-<a class="waves-effect waves-light btn" routerLink="new">Add New Recipe</a>
+<a class="waves-effect waves-light btn" (click)="onNewRecipeClick()">Add New Recipe</a>
 <p class="list-subtitle">Latest Recipes:</p>
 <div class="collection">
     <a app-recipe-item 
@@ -9,3 +9,10 @@
         routerLinkActive="active"
     ></a>
 </div>
+
+<app-confirmation-modal
+    [config]="modalConfig"
+    [(isVisible)]="isModalOpen"
+    (leftButtonClick)="onModalRegister()"
+    (rightButtonClick)="onModalLogin()"
+></app-confirmation-modal>

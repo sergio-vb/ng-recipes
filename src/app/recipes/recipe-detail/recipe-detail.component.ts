@@ -2,10 +2,12 @@ import { Component, OnInit} from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 
 import { Ingredient } from '../../shared/ingredient.model';
+import { ModalConfig } from '../../shared/modal-config.model';
 import { Recipe } from '../recipe.model';
 
 import { RecipeService } from '../recipe.service';
 import { ShoppingListService } from '../../shopping-list/shopping-list.service';
+
 
 @Component({
   selector: 'app-recipe-detail',
@@ -19,7 +21,7 @@ export class RecipeDetailComponent implements OnInit {
   recipe: Recipe;
   userOwnsRecipe: boolean;
   isConfirmationOpen: boolean;
-  modalConfig: any;
+  modalConfig: ModalConfig;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -84,7 +86,7 @@ export class RecipeDetailComponent implements OnInit {
       }
     );
   }
-  
+
   errorHandling(error){
     this.error = error;
     console.log("Error:", error);
