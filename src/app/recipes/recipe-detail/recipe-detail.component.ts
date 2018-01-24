@@ -19,6 +19,7 @@ export class RecipeDetailComponent implements OnInit {
   recipe: Recipe;
   userOwnsRecipe: boolean;
   isConfirmationOpen: boolean;
+  modalConfig: any;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -30,6 +31,14 @@ export class RecipeDetailComponent implements OnInit {
   ngOnInit() {
 
     this.isConfirmationOpen = false;
+
+    this.modalConfig = {
+      mainText: "Are you sure you want to delete this recipe? This cannot be undone.",
+      leftButtonText: "Cancel",
+      rightButtonText: "Right",
+      leftButtonStyles: "btn-flat",
+      rightButtonStyles: "btn warning"
+    }
 
     this.activatedRoute.params.subscribe(
       async (params:Params) => {
@@ -75,13 +84,14 @@ export class RecipeDetailComponent implements OnInit {
       }
     );
   }
+  
   errorHandling(error){
     this.error = error;
     console.log("Error:", error);
   }
 
-  onToggleDeleteConfirmation(){
-    this.isConfirmationOpen = !this.isConfirmationOpen;
+  onToggleConfirmation(){
+    this.isConfirmationOpen = !this.isConfirmationOpen;;
   }
   
 }

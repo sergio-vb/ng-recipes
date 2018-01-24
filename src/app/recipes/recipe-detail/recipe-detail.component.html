@@ -12,7 +12,7 @@
         <ul id="dropdown1" class="dropdown-content">
           <li><a class="clickable" (click)="onAddToShoppingList()">To Shopping List</a></li>
           <li *ngIf="userOwnsRecipe"><a class="clickable" routerLink="edit">Edit Recipe</a></li>
-          <li *ngIf="userOwnsRecipe"><a class="clickable" (click)="onToggleDeleteConfirmation()">Delete Recipe</a></li>
+          <li *ngIf="userOwnsRecipe"><a class="clickable" (click)="onToggleConfirmation()">Delete Recipe</a></li>
         </ul>
       </div>
       
@@ -27,10 +27,10 @@
 <div *ngIf="error" class="container white-text">
   <h5 class="title">Something went wrong, please try again.</h5>
 </div>
-<div class="confirmation-modal" [ngClass]="{active: isConfirmationOpen}">
-  <div class="card-panel">
-    <p>Are you sure you want to delete this recipe? This cannot be undone.</p>
-    <a class="waves-effect waves-green btn-flat" (click)="onToggleDeleteConfirmation()">Cancel</a>
-    <a class="waves-effect waves-light btn warning" (click)="onDeleteRecipe()">Delete</a>
-  </div>
-</div>
+
+<app-confirmation-modal
+  [config]="modalConfig"
+  [(isVisible)]="isConfirmationOpen"
+  (leftButtonClick)="onToggleConfirmation()"
+  (rightButtonClick)="onDeleteRecipe()"
+></app-confirmation-modal>
