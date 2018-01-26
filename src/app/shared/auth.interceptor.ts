@@ -8,26 +8,18 @@ import { AuthService } from '../auth/auth.service';
 export class AuthInterceptor implements HttpInterceptor{
     constructor(private authService: AuthService){}
     
-    //Add an auth token to any request if the token is available (it's optional, since it's not needed for reading recipes)
+    //Add an auth token to any request if the token is available (it's optional, only needed for writing)
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>>{
-        //console.log('Intercepted request: ', req);
-        let token;
-        try{
-            token = this.authService.getToken();
-        }catch(e){
-            token = '';
-            console.log("Error:", e);
-        }
-
-        let request;
-        if (token){
-            request = req.clone({
-                params: req.params.set('auth', token)
-            });
-        }else{
-            request = req
-        }
-
-        return next.handle(request);
+        return this.authService.authState.map(
+            authState => authState.token,
+            error => ""
+        ).flatMap(
+            token => {
+                let request = token ? req.clone({
+                    params: req.params.set('auth', token)
+                }) : req;
+                return next.handle(request);
+            }
+        );
     }
 }
