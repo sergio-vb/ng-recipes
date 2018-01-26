@@ -1,11 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import * as firebase from 'firebase';
+import { ReplaySubject } from 'rxjs/ReplaySubject';
 
 @Injectable()
 export class AuthService {
     private token: string;
     private userId: string;
+    authState = new ReplaySubject<any>();
 
     constructor(private router: Router){}
 
@@ -14,6 +16,10 @@ export class AuthService {
             (user:any) => {
                 this.token = user ? user.pa : "";
                 this.userId = user ? user.uid : "";
+                this.authState.next({
+                    token: this.token, 
+                    userId: this.userId
+                });
                 console.log("Auth state changed, userId:", this.userId);
             }
         );  
@@ -47,9 +53,5 @@ export class AuthService {
 
     isAuthenticated(){
         return !!this.token;
-    }
-
-    getUserId(){
-        return this.userId;
     }
 }
