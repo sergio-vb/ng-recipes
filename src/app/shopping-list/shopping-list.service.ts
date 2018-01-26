@@ -50,10 +50,15 @@ export class ShoppingListService {
   }
 
   getIngredients(){
-    const ownerId = this.authService.getUserId();
-    if (!ownerId){
-      return Observable.of([]);
-    }
-    return this.httpClient.get(`https://ng-recipes-1sv94.firebaseio.com/shoppingLists/byOwnerId/${ownerId}.json`);
+    return this.authService.authState.flatMap(
+      authState => {
+        const ownerId = authState.userId;
+        if (!ownerId){
+          return Observable.of([]);
+        }
+        return this.httpClient.get(`https://ng-recipes-1sv94.firebaseio.com/shoppingLists/byOwnerId/${ownerId}.json`);        
+      }
+    );
   }
+
 }
