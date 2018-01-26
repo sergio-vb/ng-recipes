@@ -21,6 +21,9 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     this.shoppingListService.getIngredients().subscribe(
       ingredients => {
         console.log("Ingredients received:", ingredients);
+        for (let key in ingredients){
+          this.ingredients.push(ingredients[key]);
+        }
       },
       error => {
         console.log("getIngredients error:", error);
