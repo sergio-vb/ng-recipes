@@ -21,6 +21,9 @@ export class AuthService {
                     userId: this.userId
                 });
                 console.log("Auth state changed, userId:", this.userId);
+            },
+            error => {
+                this.authState.error("Firebase auth state error.");
             }
         );  
     }
@@ -38,17 +41,6 @@ export class AuthService {
     async logoutUser(){
         await firebase.auth().signOut();
         this.router.navigate(['/']);
-    }
-
-    //Synchronously returns the cached token, and asynchronously refreshes it.
-    getToken(){
-        const currentUser = firebase.auth().currentUser;
-        if (currentUser){
-            currentUser.getIdToken().then(token => {
-                this.token = token;
-            });
-        }
-        return this.token;
     }
 
     isAuthenticated(){

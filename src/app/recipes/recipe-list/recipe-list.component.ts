@@ -65,11 +65,20 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   }
 
   onNewRecipeClick(){
-    if (this.authService.isAuthenticated()){
-      this.router.navigate(['./new'], {relativeTo: this.activatedRoute});
-    }else{
-      this.isModalOpen = true;
-    }
+    this.authService.authState.subscribe(
+      authState => {
+        //User logged in
+        if (authState.token){
+          this.router.navigate(['./new'], {relativeTo: this.activatedRoute});
+        //User not logged in, show modal
+        }else{
+          this.isModalOpen = true;
+        }
+      },
+      error => {
+        this.isModalOpen = true;
+      }
+    );
   }
 
   onModalRegister(){

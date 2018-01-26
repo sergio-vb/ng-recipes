@@ -6,7 +6,7 @@
       <li routerLinkActive="active"><a routerLink="/shopping-list">Shopping List</a></li>
       <li>|</li>
 
-      <div *ngIf="!isAuthenticated(); then loggedout else loggedin"></div>
+      <div *ngIf="!isAuthenticated; then loggedout else loggedin"></div>
       <ng-template #loggedout>
         <li routerLinkActive="active"><a routerLink="/signup">Register</a></li>
         <li routerLinkActive="active"><a routerLink="/signin">Log In</a></li>
