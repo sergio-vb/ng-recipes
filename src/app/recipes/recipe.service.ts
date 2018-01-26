@@ -97,14 +97,23 @@ export class RecipeService {
     return this.httpClient.get(`https://ng-recipes-1sv94.firebaseio.com/recipeIngredients/byRecipeId/${id}.json`);   
   }
 
-  //Checks if a recipe belongs to the current user.
+  //Checks if a recipe belongs to the currently logged in user.
   //Optionally receives the recipe object, otherwise it will get it through an http request
-  async doesUserOwnRecipe(recipeId: string, recipeParam: any): Promise<boolean>{
-    const recipe = recipeParam || await this.getRecipe(recipeId).toPromise();
-    if (!recipe){ //Recipe doesn't exist
-      return false;
+  doesRecipeBelongToUser(recipeId: string, recipeParam: any){
+    if (recipeParam){
+      return this.mapAuthStateToRecipe(recipeParam);
+    }else{
+      return this.getRecipe(recipeId).flatMap(
+        recipe => this.mapAuthStateToRecipe(recipe)
+      );
     }
-    return (recipe.ownerId && (recipe.ownerId === this.authService.getUserId())); //Edge case: Should not return true if both are undefined
+  }
+
+  //Helper function of doesRecipeBelongToUser
+  mapAuthStateToRecipe(recipe){
+    return this.authService.authState.map( 
+      authState => (!!recipe.ownerId && (recipe.ownerId === authState.userId))
+    );
   }
 
 }
