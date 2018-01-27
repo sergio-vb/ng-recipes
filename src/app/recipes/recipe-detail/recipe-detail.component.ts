@@ -63,9 +63,7 @@ export class RecipeDetailComponent implements OnInit {
             }
 
             //Sets option to enable Edit and Delete if user is owner
-            this.recipeService.doesRecipeBelongToUser(this.id, this.recipe).subscribe(
-              response => this.userOwnsRecipe = response
-            );
+            this.userOwnsRecipe = await this.recipeService.doesRecipeBelongToUser(this.id, this.recipe).first().toPromise(); //Only interested in first value, not on-going subscription
           }
 
         }catch(error){

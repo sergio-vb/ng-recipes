@@ -65,7 +65,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   }
 
   onNewRecipeClick(){
-    this.authService.getAuthState().subscribe(
+    this.authService.getAuthState().first().subscribe( //Only interested in first value, not on-going subscription
       authState => {
         //User logged in
         if (authState.token){
