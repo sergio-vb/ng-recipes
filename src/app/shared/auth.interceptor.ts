@@ -10,17 +10,16 @@ export class AuthInterceptor implements HttpInterceptor{
     
     //Add an auth token to any request if the token is available (it's optional, only needed for writing)
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>>{
-        // return this.authService.authState.map(
-        //     authState => authState.token,
-        //     error => ""
-        // ).flatMap(
-        //     token => {
-        //         let request = token ? req.clone({
-        //             params: req.params.set('auth', token)
-        //         }) : req;
-        //         return next.handle(request);
-        //     }
-        // );
-        return next.handle(req);
+        return this.authService.authState.map(
+            authState => authState.token,
+            error => ""
+        ).flatMap(
+            token => {
+                let request = token ? req.clone({
+                    params: req.params.set('auth', token)
+                }) : req;
+                return next.handle(request);
+            }
+        );
     }
 }

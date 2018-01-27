@@ -48,7 +48,7 @@ export class RecipeDetailComponent implements OnInit {
         this.error = "";
 
         try{
-          this.recipe = <Recipe> await this.recipeService.getRecipe(this.id).toPromise();
+          this.recipe = <Recipe> await this.recipeService.getRecipe(this.id).first().toPromise();
           
           //If recipe doesn't exist, redirect to recipes home
           if (this.recipe === null){
@@ -56,7 +56,7 @@ export class RecipeDetailComponent implements OnInit {
           }else{
             
             //Gets recipe ingredients
-            const ingredientsResponse = await this.recipeService.getRecipeIngredients(this.id).toPromise();
+            const ingredientsResponse = await this.recipeService.getRecipeIngredients(this.id).first().toPromise();
             this.ingredients = [];
             for (let id in ingredientsResponse){
               this.ingredients.push(ingredientsResponse[id]);
