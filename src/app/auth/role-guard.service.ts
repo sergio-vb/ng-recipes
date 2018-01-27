@@ -28,7 +28,7 @@ export class RoleGuard implements CanActivate{
     // }
 
     canActivate(activatedRouteSnapshot: ActivatedRouteSnapshot, routerStateSnapshot: RouterStateSnapshot){
-        return this.authService.authState
+        return this.authService.getAuthState()
             //Maps response to redirect if not authenticated
             .map( userInfo => {
                 console.log("AuthState userInfo:", userInfo);

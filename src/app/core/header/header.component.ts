@@ -15,7 +15,7 @@ export class HeaderComponent implements OnInit{
   ){}
 
   ngOnInit(){
-    this.authService.authState.subscribe(
+    this.authService.getAuthState().subscribe(
       authState => this.isAuthenticated = !!authState.token,
       error => this.isAuthenticated = false
     );

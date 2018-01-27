@@ -7,7 +7,9 @@ import { ReplaySubject } from 'rxjs/ReplaySubject';
 export class AuthService {
     private token: string;
     private userId: string;
-    authState = new ReplaySubject<any>();
+    
+    private _authState = new ReplaySubject<any>();
+    private authState = this._authState.asObservable(); //Hides the observer-side of the subject out of AuthService
 
     constructor(private router: Router){}
 
@@ -16,16 +18,20 @@ export class AuthService {
             (user:any) => {
                 this.token = user ? user.pa : "";
                 this.userId = user ? user.uid : "";
-                this.authState.next({
+                this._authState.next({
                     token: this.token, 
                     userId: this.userId
                 });
                 console.log("Auth state changed, userId:", this.userId);
             },
             error => {
-                this.authState.error("Firebase auth state error.");
+                this._authState.error("Firebase auth state error.");
             }
         );  
+    }
+
+    getAuthState(){
+        return this.authState;
     }
 
     async signupUser(email: string, password: string){

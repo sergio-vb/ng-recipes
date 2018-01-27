@@ -11,7 +11,7 @@ export class AuthGuard implements CanActivate{
     ){}
 
     canActivate(activatedRouteSnapshot: ActivatedRouteSnapshot, routerStateSnapshot: RouterStateSnapshot){
-        return this.authService.authState.map(
+        return this.authService.getAuthState().map(
             authState => {
                 const isAuthenticated = !!authState.token;
                 if (!isAuthenticated){

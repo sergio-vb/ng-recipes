@@ -84,7 +84,7 @@ export class RecipeEditComponent implements OnInit {
 
   async onSubmit(){
     const formValues = this.recipeForm.value;
-    const { userId } = await this.authService.authState.toPromise();
+    const { userId } = await this.authService.getAuthState().first().toPromise();
     
     const recipe = new Recipe(
       userId,
