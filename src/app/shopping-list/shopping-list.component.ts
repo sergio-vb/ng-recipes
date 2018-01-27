@@ -10,8 +10,9 @@ import { ShoppingListService } from './shopping-list.service';
   styleUrls: ['./shopping-list.component.scss']
 })
 export class ShoppingListComponent implements OnInit, OnDestroy {
-  ingredients: Ingredient[];
+  public ingredients: Ingredient[];
   private subscription: Subscription;
+
   constructor(private shoppingListService: ShoppingListService) {}
 
   ngOnInit() {

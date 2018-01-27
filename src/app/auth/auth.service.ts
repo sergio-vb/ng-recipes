@@ -9,7 +9,7 @@ export class AuthService {
     private userId: string;
     
     private _authState = new ReplaySubject<any>();
-    private authState = this._authState.asObservable(); //Hides the observer-side of the subject out of AuthService
+    private authState = this._authState.asObservable(); //Hides the observer-side of the subject, so .next() is not available out of AuthService
 
     constructor(private router: Router){}
 
