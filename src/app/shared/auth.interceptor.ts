@@ -11,7 +11,7 @@ export class AuthInterceptor implements HttpInterceptor{
     //Add an auth token to any request if the token is available (it's optional, only needed for writing)
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>>{
         console.log("Http request intercepted.");
-        return this.authService.getAuthState().map(
+        return this.authService.getAuthState().first().map(
             authState => authState.token,
             error => ""
         ).flatMap(
@@ -23,4 +23,13 @@ export class AuthInterceptor implements HttpInterceptor{
             }
         );
     }
+
+    /* 
+    Note: By default, Angular's HttpClient observables run .complete() when an HTTP request finishes, so 
+    it's not necessary to unsubscribe. In this intercept function, the "first()" method was added on 
+    line 14 so that the observable returned by intercept() could also complete, otherwise it would be 
+    derived from a source that never completes (the AuthState observable), and any subscriptions created 
+    by any components requesting data from an HTTP request would remain active. This would lead to unwanted 
+    behaviors if the source AuthState observable emits new values.
+    */
 }
