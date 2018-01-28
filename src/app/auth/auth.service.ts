@@ -30,6 +30,12 @@ export class AuthService {
         );  
     }
 
+    //Use this to get the current state of authentication for validation
+    getLatestAuthState(){
+        return this.authState.first();
+    }
+
+    //Use this to create on-going subscriptions to react to authentication changes. This observable never completes on its own.
     getAuthState(){
         return this.authState;
     }
@@ -48,8 +54,5 @@ export class AuthService {
         await firebase.auth().signOut();
         this.router.navigate(['/']);
     }
-
-    isAuthenticated(){
-        return !!this.token;
-    }
+    
 }

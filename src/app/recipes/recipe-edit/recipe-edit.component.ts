@@ -84,7 +84,7 @@ export class RecipeEditComponent implements OnInit {
 
   async onSubmit(){
     const formValues = this.recipeForm.value;
-    const { userId } = await this.authService.getAuthState().first().toPromise(); //Only interested in first value, not on-going subscription
+    const { userId } = await this.authService.getLatestAuthState().toPromise(); //Only interested in first value, not on-going subscription
     
     const recipe = new Recipe(
       userId,

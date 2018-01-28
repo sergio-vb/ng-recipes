@@ -56,14 +56,14 @@ export class RecipeDetailComponent implements OnInit {
           }else{
             
             //Gets recipe ingredients
-            const ingredientsResponse = await this.recipeService.getRecipeIngredients(this.id).first().toPromise();
+            const ingredientsResponse = await this.recipeService.getRecipeIngredients(this.id).toPromise();
             this.ingredients = [];
             for (let id in ingredientsResponse){
               this.ingredients.push(ingredientsResponse[id]);
             }
 
             //Sets option to enable Edit and Delete if user is owner
-            this.userOwnsRecipe = await this.recipeService.doesRecipeBelongToUser(this.id, this.recipe).first().toPromise(); //Only interested in first value, not on-going subscription
+            this.userOwnsRecipe = await this.recipeService.doesRecipeBelongToUser(this.id, this.recipe).toPromise(); //Only interested in first value, not on-going subscription
           }
 
         }catch(error){

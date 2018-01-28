@@ -111,7 +111,7 @@ export class RecipeService {
 
   //Helper function of doesRecipeBelongToUser
   mapAuthStateToRecipe(recipe){
-    return this.authService.getAuthState().map( 
+    return this.authService.getLatestAuthState().map( 
       authState => (!!recipe.ownerId && (recipe.ownerId === authState.userId))
     );
   }

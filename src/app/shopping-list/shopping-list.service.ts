@@ -50,7 +50,7 @@ export class ShoppingListService {
   }
 
   getIngredients(){
-    return this.authService.getAuthState().flatMap(
+    return this.authService.getLatestAuthState().flatMap(
       authState => {
         const ownerId = authState.userId;
         if (!ownerId){
