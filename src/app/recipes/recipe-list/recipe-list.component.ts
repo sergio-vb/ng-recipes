@@ -65,10 +65,8 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   }
 
   onNewRecipeClick(){
-    console.log("onNewRecipeClick executed");
     this.authService.getLatestAuthState().subscribe( //Only interested in first value of authState, not on-going subscription
       authState => {
-        console.log("onNewRecipeClick authState:", authState);
         //User logged in
         if (authState.token){
           this.router.navigate(['./new'], {relativeTo: this.activatedRoute});
@@ -78,11 +76,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
         }
       },
       error => {
-        console.log("onNewRecipeClick error:", error);
         this.isModalOpen = true;
-      },
-      () => {
-        console.log("Thing completed.")
       }
     );
   }
