@@ -3,16 +3,22 @@ import { CommonModule } from '@angular/common';
 
 import { DropdownDirective } from './dropdown.directive';
 import { ConfirmationModalComponent } from './confirmation-modal/confirmation-modal.component';
+import { ObjectKeys } from './object-keys.pipe';
 
 @NgModule({
-    declarations: [DropdownDirective, ConfirmationModalComponent],
+    declarations: [
+        DropdownDirective, 
+        ConfirmationModalComponent,
+        ObjectKeys
+    ],
     imports: [
         CommonModule
     ],
     exports: [
         CommonModule, /* common directives, ngClass, ngFor, ngIf */
         DropdownDirective,
-        ConfirmationModalComponent
+        ConfirmationModalComponent,
+        ObjectKeys
     ]
 })
 export class SharedModule {}
