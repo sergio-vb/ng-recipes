@@ -11,20 +11,21 @@ import { ShoppingListService } from './shopping-list.service';
 })
 export class ShoppingListComponent implements OnInit, OnDestroy {
   public ingredients: Ingredient[];
+  public ingredients2: any;
   private subscription: Subscription;
+  itemSelected: number;
 
   constructor(private shoppingListService: ShoppingListService) {}
 
   ngOnInit() {
-    console.log("Shopping list initialized");
-
     this.ingredients = [];
     this.shoppingListService.getIngredients().subscribe(
       ingredients => {
         console.log("Ingredients received:", ingredients);
-        for (let key in ingredients){
-          this.ingredients.push(ingredients[key]);
-        }
+        // for (let key in ingredients){
+        //   this.ingredients.push(ingredients[key]);
+        // }
+        this.ingredients2 = ingredients;
       },
       error => {
         console.log("getIngredients error:", error);
@@ -40,7 +41,8 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   }
 
   onEditItem(index:number){
-    this.shoppingListService.startedEditing.next(index);
+    // this.shoppingListService.startedEditing.next(index);
+    this.itemSelected = index;
   }
 
   ngOnDestroy(){
