@@ -19,6 +19,7 @@ export class ShoppingListEditComponent implements OnInit, OnChanges {
   ingredientForm: FormGroup;
   isConfirmationOpen: boolean;
   modalConfig: ModalConfig;
+  newIngredient: Ingredient;
 
   constructor(private shoppingListService: ShoppingListService) {}
 
@@ -54,28 +55,32 @@ export class ShoppingListEditComponent implements OnInit, OnChanges {
   }
 
   onAddItem() {
-    const newIngredient = new Ingredient(
+    this.newIngredient = new Ingredient(
       this.ingredientForm.controls.ingredientName.value,
       this.ingredientForm.controls.ingredientAmount.value
     );
     if (this.editMode){
-      this.shoppingListService.updateLocalIngredient(this.editedItemKey, newIngredient);
+      this.shoppingListService.updateLocalIngredient(this.editedItemKey, this.newIngredient);
+      this.resetEditMode();
     }else{
 
       try{
-        this.shoppingListService.addLocalIngredient(newIngredient);
+        this.shoppingListService.addLocalIngredient(this.newIngredient);
+        this.resetEditMode();
       }catch(e){
         this.isConfirmationOpen = true;
       }
     }
-    this.resetEditMode();
+    
   }
-  onConfirmUpdateExisting(){
-    const newIngredient = new Ingredient(
-      this.ingredientForm.controls.ingredientName.value,
-      this.ingredientForm.controls.ingredientAmount.value
-    );
-    this.shoppingListService.updateLocalIngredient(this.editedItemKey, newIngredient);
+
+  onConfirmAddToExisting(){
+    //Gets the ingredient that has the same name as the new ingredient, and adds their amounts together
+    this.newIngredient.amount += this.shoppingListService.getLocalIngredient(this.newIngredient.name).amount;
+    
+    this.shoppingListService.updateLocalIngredient(this.editedItemKey, this.newIngredient);
+    this.resetEditMode();
+    this.isConfirmationOpen = false;
   }
 
   onClearForm(){
