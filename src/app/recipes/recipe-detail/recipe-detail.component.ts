@@ -37,7 +37,7 @@ export class RecipeDetailComponent implements OnInit {
     this.modalConfig = {
       mainText: "Are you sure you want to delete this recipe? This cannot be undone.",
       leftButtonText: "Cancel",
-      rightButtonText: "Right",
+      rightButtonText: "Delete",
       leftButtonStyles: "btn-flat",
       rightButtonStyles: "btn warning"
     }
