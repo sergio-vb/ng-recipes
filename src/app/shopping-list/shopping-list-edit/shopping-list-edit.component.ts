@@ -87,7 +87,7 @@ export class ShoppingListEditComponent implements OnInit, OnChanges {
     this.resetEditMode();
   }
   onDeleteIngredient(){
-    //this.shoppingListService.deleteLocalIngredient(this.editedItemIndex);
+    this.shoppingListService.deleteLocalIngredient(this.editedItemKey);
     this.resetEditMode();
   }
 

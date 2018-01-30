@@ -53,9 +53,9 @@ export class ShoppingListService {
     this.ingredientListUpdated.next(this.getLocalIngredients());
   }
 
-  deleteLocalIngredient(index: number){
-    // this.ingredients.splice(index, 1);
-    // this.ingredientListUpdated.next(this.getLocalIngredients());
+  deleteLocalIngredient(key: string){
+    delete this.ingredients[key];
+    this.ingredientListUpdated.next(this.getLocalIngredients());    
   }
 
   getIngredients(){
