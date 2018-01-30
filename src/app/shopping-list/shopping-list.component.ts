@@ -10,22 +10,17 @@ import { ShoppingListService } from './shopping-list.service';
   styleUrls: ['./shopping-list.component.scss']
 })
 export class ShoppingListComponent implements OnInit, OnDestroy {
-  public ingredients: Ingredient[];
-  public ingredients2: any;
+  public ingredients: any;
   private subscription: Subscription;
-  itemSelected: number;
+  itemSelected: string;
 
   constructor(private shoppingListService: ShoppingListService) {}
 
   ngOnInit() {
-    this.ingredients = [];
     this.shoppingListService.getIngredients().subscribe(
       ingredients => {
         console.log("Ingredients received:", ingredients);
-        // for (let key in ingredients){
-        //   this.ingredients.push(ingredients[key]);
-        // }
-        this.ingredients2 = ingredients;
+        this.ingredients = ingredients;
       },
       error => {
         console.log("getIngredients error:", error);
@@ -33,16 +28,15 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     );
 
     this.subscription = this.shoppingListService.ingredientListUpdated.subscribe(
-      (ingredients: Ingredient[]) => {
-        console.log("Shopping list received ingredients updated")
+      (ingredients) => {
+        console.log("Shopping list received ingredients updated:", ingredients);
         this.ingredients = ingredients;
       }
     );
   }
 
-  onEditItem(index:number){
-    // this.shoppingListService.startedEditing.next(index);
-    this.itemSelected = index;
+  onEditItem(key: string){
+    this.itemSelected = key;
   }
 
   ngOnDestroy(){

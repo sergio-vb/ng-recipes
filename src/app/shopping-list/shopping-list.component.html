@@ -7,17 +7,17 @@
       <li><a class="clickable" routerLink="/signup">Register</a> or <a class="clickable" routerLink="/signin">log in</a> to save your shopping list to your profile!</li>      
     </ul>
 
-    <app-shopping-list-edit ></app-shopping-list-edit>
+    <app-shopping-list-edit [editedItemKey]="itemSelected"></app-shopping-list-edit>
     
-    <p class="shopping-list-empty" *ngIf="(ingredients2 | objectKeys).length === 0">You don't have any ingredients in your shopping list yet.</p>
+    <p class="shopping-list-empty" *ngIf="(ingredients | objectKeys).length === 0">You don't have any ingredients in your shopping list yet.</p>
     <div class="collection">
       <a
-        (click)="onEditItem(i)"
-        *ngFor="let key of ingredients2 | objectKeys"
+        *ngFor="let key of ingredients | objectKeys"
+        (click)="onEditItem(key)"
         class="collection-item" 
         style="cursor: pointer"
       >
-        {{ingredients2[key].name}} - {{ingredients2[key].amount}}
+        {{ingredients[key].name}} - {{ingredients[key].amount}}
       </a>
     </div>
   </div>

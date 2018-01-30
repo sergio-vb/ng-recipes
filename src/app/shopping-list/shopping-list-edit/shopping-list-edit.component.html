@@ -32,3 +32,10 @@
     </form>
   </div>
 </div>
+
+<app-confirmation-modal
+  [config]="modalConfig"
+  [(isVisible)]="isConfirmationOpen"
+  (leftButtonClick)="onToggleConfirmation()"
+  (rightButtonClick)="onConfirmUpdateExisting()"
+></app-confirmation-modal>

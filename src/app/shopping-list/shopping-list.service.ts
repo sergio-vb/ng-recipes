@@ -10,8 +10,7 @@ import { AuthService } from '../auth/auth.service';
 @Injectable()
 export class ShoppingListService {
   ingredientListUpdated = new Subject<Ingredient[]>();
-  startedEditing = new Subject<number>();
-  private ingredients: Ingredient[];
+  private ingredients: any;
 
   constructor(
     private httpClient: HttpClient,
@@ -20,33 +19,43 @@ export class ShoppingListService {
 
   
 
-  getLocalIngredient(index: number) {
-    return this.ingredients[index];
+  getLocalIngredient(key: string) {
+    return Object.assign({}, this.ingredients[key]); //Returns a copy, to avoid giving a direct reference to the object
   }
 
   getLocalIngredients() {
-    return this.ingredients.slice(); //Returns a copy to avoid giving direct access.
+    return Object.assign({}, this.ingredients); //Returns a copy, to avoid giving a direct reference to the object
   }
 
   addLocalIngredient(ingredient: Ingredient) {
-    this.ingredients.push(ingredient);
+    if (this.ingredients[ingredient.name]){
+      console.log("Ingredient already exists.");
+      throw("Ingredient already exists.");
+    }
+    console.log("Ingredient doesn't exist");
+    this.ingredients[ingredient.name] = ingredient;
     this.ingredientListUpdated.next(this.getLocalIngredients());
   }
 
   addLocalIngredients(ingredients: Ingredient[]) {
-    console.log('Ingredients to add: ', ingredients);
-    this.ingredients.push(...ingredients);
-    this.ingredientListUpdated.next(this.getLocalIngredients());
+    // console.log('Ingredients to add: ', ingredients);
+    // ingredients.map( x => {
+    //   this.ingredients[x.name] = x; //Review to avoid overwriting if it already exists
+    // });
+    // this.ingredientListUpdated.next(this.getLocalIngredients());
   }
 
-  updateLocalIngredient(index: number, newIngredient: Ingredient){
-    this.ingredients[index] = newIngredient;
+  updateLocalIngredient(oldKey: string, newIngredient: Ingredient){
+    if (oldKey != newIngredient.name){
+      delete this.ingredients[oldKey];
+    }
+    this.ingredients[newIngredient.name] = newIngredient;
     this.ingredientListUpdated.next(this.getLocalIngredients());
   }
 
   deleteLocalIngredient(index: number){
-    this.ingredients.splice(index, 1);
-    this.ingredientListUpdated.next(this.getLocalIngredients());
+    // this.ingredients.splice(index, 1);
+    // this.ingredientListUpdated.next(this.getLocalIngredients());
   }
 
   getIngredients(){
@@ -54,9 +63,14 @@ export class ShoppingListService {
       authState => {
         const ownerId = authState.userId;
         if (!ownerId){
+          this.ingredients = [];
           return Observable.of([]);
         }
-        return this.httpClient.get(`https://ng-recipes-1sv94.firebaseio.com/shoppingLists/byOwnerId/${ownerId}.json`);        
+        return this.httpClient.get(`https://ng-recipes-1sv94.firebaseio.com/shoppingLists/byOwnerId/${ownerId}.json`)
+          .map( ingredients => {
+            this.ingredients = ingredients;
+            return ingredients;
+          });
       }
     );
   }
