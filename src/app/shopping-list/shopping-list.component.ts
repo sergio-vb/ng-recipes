@@ -10,9 +10,10 @@ import { ShoppingListService } from './shopping-list.service';
   styleUrls: ['./shopping-list.component.scss']
 })
 export class ShoppingListComponent implements OnInit, OnDestroy {
-  public ingredients: any;
   private subscription: Subscription;
-  itemSelected: string;
+  public ingredients: any;
+  public itemSelected: string;
+  public unsavedChanges: boolean;
 
   constructor(private shoppingListService: ShoppingListService) {}
 
@@ -30,6 +31,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     this.subscription = this.shoppingListService.ingredientListUpdated.subscribe(
       (ingredients) => {
         console.log("Shopping list received ingredients updated:", ingredients);
+        this.unsavedChanges = this.shoppingListService.getUnsavedChanges();
         this.ingredients = ingredients;
       }
     );
@@ -37,6 +39,17 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
 
   onEditItem(key: string){
     this.itemSelected = key;
+  }
+
+  onSaveList(){
+    this.shoppingListService.saveIngredients().subscribe(
+      success => {
+        this.unsavedChanges = this.shoppingListService.getUnsavedChanges();
+      },
+      error => {
+        console.log("Save ingredients error:", error);
+      }
+    );
   }
 
   ngOnDestroy(){

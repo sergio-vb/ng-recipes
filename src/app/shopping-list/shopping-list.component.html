@@ -1,6 +1,15 @@
 <section class="row shopping-list">
   <div class="col s8 offset-s2">
     <h3 class="shopping-list-title">Shopping List</h3>
+    <button 
+      (click)="onSaveList()"
+      [disabled]="!unsavedChanges"
+      class="waves-effect waves-light btn orange save-changes" 
+      type="text" 
+    >
+      Save Changes
+    </button>
+
     <ul class="shopping-list-instructions browser-default">
       <li>After finding a recipe you like, you can copy all of its ingredients to your shopping list directly from the recipe's options.</li>
       <li>You can edit the names and quantities of existing ingredients, or manually add your own ingredients to your list.</li>

@@ -9,8 +9,9 @@ import { AuthService } from '../auth/auth.service';
 
 @Injectable()
 export class ShoppingListService {
-  ingredientListUpdated = new Subject<Ingredient[]>();
   private ingredients: any;
+  private unsavedChanges: boolean;
+  public ingredientListUpdated = new Subject<Ingredient[]>();
 
   constructor(
     private httpClient: HttpClient,
@@ -29,11 +30,10 @@ export class ShoppingListService {
 
   addLocalIngredient(ingredient: Ingredient) {
     if (this.ingredients[ingredient.name]){
-      console.log("Ingredient already exists.");
       throw("Ingredient already exists.");
     }
-    console.log("Ingredient doesn't exist");
     this.ingredients[ingredient.name] = ingredient;
+    this.unsavedChanges = true;
     this.ingredientListUpdated.next(this.getLocalIngredients());
   }
 
@@ -50,12 +50,18 @@ export class ShoppingListService {
       delete this.ingredients[oldKey];
     }
     this.ingredients[newIngredient.name] = newIngredient;
+    this.unsavedChanges = true;
     this.ingredientListUpdated.next(this.getLocalIngredients());
   }
 
   deleteLocalIngredient(key: string){
     delete this.ingredients[key];
+    this.unsavedChanges = true;
     this.ingredientListUpdated.next(this.getLocalIngredients());    
+  }
+
+  getUnsavedChanges(){
+    return this.unsavedChanges;
   }
 
   getIngredients(){
@@ -71,6 +77,22 @@ export class ShoppingListService {
             this.ingredients = ingredients;
             return ingredients;
           });
+      }
+    );
+  }
+  
+  saveIngredients(){
+    return this.authService.getLatestAuthState().flatMap(
+      authState => {
+        const ownerId = authState.userId;
+        if (!ownerId){
+          throw("User not logged in.");
+        }
+        return this.httpClient.put(`https://ng-recipes-1sv94.firebaseio.com/shoppingLists/byOwnerId/${ownerId}.json`, this.ingredients)
+        .map( ingredients => {
+          this.unsavedChanges = false;
+          return ingredients;
+        });
       }
     );
   }
