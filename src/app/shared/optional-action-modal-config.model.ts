@@ -1,4 +1,4 @@
-export class ModalConfig{
+export class OptionalActionModalConfig{
     constructor(
         public mainText: string,
         public leftButtonText: string,

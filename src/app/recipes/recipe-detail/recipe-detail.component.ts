@@ -2,7 +2,7 @@ import { Component, OnInit} from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 
 import { Ingredient } from '../../shared/ingredient.model';
-import { ModalConfig } from '../../shared/modal-config.model';
+import { OptionalActionModalConfig } from '../../shared/optional-action-modal-config.model';
 import { Recipe } from '../recipe.model';
 
 import { RecipeService } from '../recipe.service';
@@ -21,7 +21,7 @@ export class RecipeDetailComponent implements OnInit {
   recipe: Recipe;
   userOwnsRecipe: boolean;
   isConfirmationOpen: boolean;
-  modalConfig: ModalConfig;
+  modalConfig: OptionalActionModalConfig;
 
   constructor(
     private activatedRoute: ActivatedRoute,

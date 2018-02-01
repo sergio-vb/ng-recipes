@@ -33,9 +33,9 @@
   </div>
 </div>
 
-<app-confirmation-modal
+<app-optional-action-modal
   [config]="modalConfig"
   [(isVisible)]="isConfirmationOpen"
   (leftButtonClick)="onToggleConfirmation()"
   (rightButtonClick)="onConfirmAddToExisting()"
-></app-confirmation-modal>
+></app-optional-action-modal>

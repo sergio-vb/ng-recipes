@@ -28,9 +28,9 @@
   <h5 class="title">Something went wrong, please try again.</h5>
 </div>
 
-<app-confirmation-modal
+<app-optional-action-modal
   [config]="modalConfig"
   [(isVisible)]="isConfirmationOpen"
   (leftButtonClick)="onToggleConfirmation()"
   (rightButtonClick)="onDeleteRecipe()"
-></app-confirmation-modal>
+></app-optional-action-modal>

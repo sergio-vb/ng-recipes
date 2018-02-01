@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 
-import { ModalConfig } from '../../shared/modal-config.model';
+import { OptionalActionModalConfig } from '../../shared/optional-action-modal-config.model';
 import { Recipe } from '../recipe.model';
 
 import { AuthService } from '../../auth/auth.service';
@@ -17,7 +17,7 @@ import { RecipeService } from '../recipe.service';
 export class RecipeListComponent implements OnInit, OnDestroy {
   recipes: Recipe[];
   recipeSubscription: Subscription;
-  modalConfig: ModalConfig;
+  modalConfig: OptionalActionModalConfig;
   isModalOpen: boolean;
 
 

@@ -3,7 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs/Subscription';
 
 import { Ingredient } from '../../shared/ingredient.model';
-import { ModalConfig } from '../../shared/modal-config.model';
+import { OptionalActionModalConfig } from '../../shared/optional-action-modal-config.model';
 
 import { ShoppingListService } from '../shopping-list.service';
 
@@ -18,7 +18,7 @@ export class ShoppingListEditComponent implements OnInit, OnChanges {
   editedItem: Ingredient;
   ingredientForm: FormGroup;
   isConfirmationOpen: boolean;
-  modalConfig: ModalConfig;
+  modalConfig: OptionalActionModalConfig;
   newIngredient: Ingredient;
 
   constructor(private shoppingListService: ShoppingListService) {}

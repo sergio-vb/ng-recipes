@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 
 import { Ingredient } from '../shared/ingredient.model';
-import { ModalConfig } from '../shared/modal-config.model';
+import { OptionalActionModalConfig } from '../shared/optional-action-modal-config.model';
 
 import { ShoppingListService } from './shopping-list.service';
 
@@ -17,7 +17,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   public ingredients: any;
   public isModalOpen: boolean;
   public itemSelected: string;
-  public modalConfig: ModalConfig;
+  public modalConfig: OptionalActionModalConfig;
   public unsavedChangesStatus: boolean;
 
   constructor(

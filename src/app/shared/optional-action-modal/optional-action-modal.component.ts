@@ -1,15 +1,15 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 
-import { ModalConfig } from '../modal-config.model';
+import { OptionalActionModalConfig } from '../optional-action-modal-config.model';
 
 @Component({
-  selector: 'app-confirmation-modal',
-  templateUrl: './confirmation-modal.component.html',
-  styleUrls: ['./confirmation-modal.component.scss']
+  selector: 'app-optional-action-modal',
+  templateUrl: './optional-action-modal.component.html',
+  styleUrls: ['./optional-action-modal.component.scss']
 })
-export class ConfirmationModalComponent implements OnInit {
+export class OptionalActionModalComponent implements OnInit {
 
-  @Input() config: ModalConfig;
+  @Input() config: OptionalActionModalConfig;
   @Input() isVisible: boolean;
   @Output() isVisibleChange = new EventEmitter<boolean>();
   @Output() leftButtonClick = new EventEmitter();
