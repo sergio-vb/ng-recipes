@@ -32,6 +32,20 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
+    this.initializeModals();
+    this.initializeData();
+
+    this.subscription = this.shoppingListService.ingredientListUpdated.subscribe(
+      (ingredients) => {
+        console.log("Shopping list received ingredients updated:", ingredients);
+        this.unsavedChangesStatus = this.shoppingListService.getUnsavedChangesStatus();
+        console.log("UnsavedChangesStatus:", this.unsavedChangesStatus);
+        this.ingredients = ingredients;
+      }
+    );
+  }
+
+  initializeModals(){
     this.isSaveListModalOpen = false;
     this.saveListModalConfig = {
       mainText: "Please log in or register to save your shopping list.",
@@ -46,48 +60,35 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
       mainText: "You have a saved shopping list and an unsaved list. Do you want to merge them together?",
       buttons: [
         {
-          text: "Keep unsaved only",
+          text: "Keep both and merge (Recommended)",
           styles: "btn single-column-btn"
+        },
+        {
+          text: "Keep unsaved only",
+          styles: "btn orange single-column-btn"
         },
         {
           text: "Keep saved only",
-          styles: "btn single-column-btn"
+          styles: "btn orange single-column-btn"
         },
-        {
-          text: "Keep both and merge",
-          styles: "btn single-column-btn"
-        }
+        
       ]
     };
+  }
 
-    /* Second modal:
-      You have a saved shopping list and an unsaved list. Do you want to merge them together?
-        Merge them together (Recommended)
-        Keep only the unsaved list
-        Keep only the saved list
-    */
-
+  initializeData(){
     this.shoppingListService.getIngredients().subscribe(
       ingredients => {
         console.log("Ingredients received:", ingredients);
         this.ingredients = ingredients;
+        this.isListConflictModalOpen = false;
+        this.unsavedChangesStatus = this.shoppingListService.getUnsavedChangesStatus();
       },
       error => {
         console.log("getIngredients error:", error);
         if (error === "Shopping lists conflict."){
           this.isListConflictModalOpen = true;
         }
-      }
-    );
-
-    this.unsavedChangesStatus = this.shoppingListService.getUnsavedChangesStatus();
-
-    this.subscription = this.shoppingListService.ingredientListUpdated.subscribe(
-      (ingredients) => {
-        console.log("Shopping list received ingredients updated:", ingredients);
-        this.unsavedChangesStatus = this.shoppingListService.getUnsavedChangesStatus();
-        console.log("UnsavedChangesStatus:", this.unsavedChangesStatus);
-        this.ingredients = ingredients;
       }
     );
   }
@@ -123,7 +124,36 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   }
 
   onListConflictModalClick(buttonIndex: number){
-    console.log("Button clicked:", buttonIndex);
+    switch (buttonIndex){
+
+      //Keep both lists and merge them together
+      case 0:
+        this.shoppingListService.mergeLists().subscribe(
+          ingredients => {
+            this.ingredients = ingredients;
+            this.isListConflictModalOpen = false;
+            this.unsavedChangesStatus = this.shoppingListService.getUnsavedChangesStatus();        
+          }
+        );
+        break;
+      
+      //Keep only the unsaved list: Saves the cached version, overwriting the previously saved list
+      case 1:
+        this.shoppingListService.saveIngredients().subscribe(
+          success => {
+            this.unsavedChangesStatus = this.shoppingListService.getUnsavedChangesStatus();
+            this.isListConflictModalOpen = false;
+          }
+        );
+        break;
+
+      //Keep only the saved list: Clears cached version and fetches saved list again
+      case 2:
+        this.shoppingListService.resetCache();
+        this.initializeData();
+        break;
+      
+    }
   }
 
 }

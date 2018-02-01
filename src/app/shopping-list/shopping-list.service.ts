@@ -2,10 +2,10 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
+import { Subscription } from 'rxjs/Subscription';
 
 import { Ingredient } from '../shared/ingredient.model';
 import { AuthService } from '../auth/auth.service';
-import { Subscription } from 'rxjs/Subscription';
 
 
 @Injectable()
@@ -26,11 +26,15 @@ export class ShoppingListService implements OnDestroy{
     this.authStateSubscription = this.authService.getAuthState().subscribe(
       ({userId}) => {
         if (!userId){
-          this.ingredients = {};
-          this.unsavedChangesStatus = false;
+          this.resetCache();
         }
       }
     );
+  }
+
+  resetCache(){
+    this.ingredients = {};
+    this.unsavedChangesStatus = false;
   }
 
   ngOnDestroy(){
@@ -139,16 +143,42 @@ export class ShoppingListService implements OnDestroy{
   
   saveIngredients(){
     return this.authService.getLatestAuthState().flatMap(
-      authState => {
-        const ownerId = authState.userId;
-        if (!ownerId){
+      ({userId}) => {
+        if (!userId){
           throw("User not logged in.");
         }
-        return this.httpClient.put(`https://ng-recipes-1sv94.firebaseio.com/shoppingLists/byOwnerId/${ownerId}.json`, this.ingredients)
-        .map( ingredients => {
-          this.unsavedChangesStatus = false;
-          return ingredients;
-        });
+        return this.httpClient.put(`https://ng-recipes-1sv94.firebaseio.com/shoppingLists/byOwnerId/${userId}.json`, this.ingredients)
+          .map( ingredients => {
+            this.unsavedChangesStatus = false;
+            return ingredients;
+          });
+      }
+    );
+  }
+
+  mergeLists(){
+    return this.authService.getLatestAuthState().flatMap(
+      ({userId}) => {
+        if (!userId){
+          throw("User not logged in.");
+        }
+        return this.httpClient.get(`https://ng-recipes-1sv94.firebaseio.com/shoppingLists/byOwnerId/${userId}.json`)
+          .map( userIngredients => userIngredients || {})
+          .map( userIngredients => {
+            Object.keys(userIngredients).map( key => {
+              
+              //If a saved ingredient already exists in the cached version, add their amounts together
+              if (this.ingredients[key]){
+                this.ingredients[key].amount += userIngredients[key].amount;
+              
+              //Otherwise, just add the ingredient to the cached version
+              }else{
+                this.ingredients[key] = userIngredients[key];
+              }
+            });
+            this.unsavedChangesStatus = false;
+            return this.ingredients;
+          });
       }
     );
   }
