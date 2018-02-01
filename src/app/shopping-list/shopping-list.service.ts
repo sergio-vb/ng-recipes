@@ -1,24 +1,41 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 
 import { Ingredient } from '../shared/ingredient.model';
 import { AuthService } from '../auth/auth.service';
+import { Subscription } from 'rxjs/Subscription';
 
 
 @Injectable()
-export class ShoppingListService {
+export class ShoppingListService implements OnDestroy{
   private ingredients: any;
   private unsavedChangesStatus: boolean;
   public ingredientListUpdated = new Subject<Ingredient[]>();
+  private authStateSubscription: Subscription;
 
   constructor(
     private httpClient: HttpClient,
     private authService: AuthService
-  ){ }
+  ){ 
+    this.init();
+  }
 
-  
+  init(){
+    this.authStateSubscription = this.authService.getAuthState().subscribe(
+      ({userId}) => {
+        if (!userId){
+          this.ingredients = {};
+          this.unsavedChangesStatus = false;
+        }
+      }
+    );
+  }
+
+  ngOnDestroy(){
+    this.authStateSubscription.unsubscribe();
+  }
 
   getLocalIngredient(key: string) {
     return Object.assign({}, this.ingredients[key]); //Returns a copy, to avoid giving a direct reference to the object
@@ -68,7 +85,7 @@ export class ShoppingListService {
 
     /*
     - If user is logged in
-      - If there's a non-empty cached version, and there are no unsaved changes, return the cached version.
+      - If there's a non-empty cached version, and there are no unsaved changes, return the cached version (because it would necessarily match the database version, so there is no need to fetch it).
       - Get user's shopping list from database:
         - If the user already has a non-empty shopping list, and there's also a non-empty cached temporary shopping list, throw an error.
         - Else, return either the user's list if it's non-empty, the existing cache, or an empty object (in that priority).
