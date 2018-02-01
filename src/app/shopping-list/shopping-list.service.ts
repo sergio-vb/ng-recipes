@@ -10,7 +10,7 @@ import { AuthService } from '../auth/auth.service';
 @Injectable()
 export class ShoppingListService {
   private ingredients: any;
-  private unsavedChanges: boolean;
+  private unsavedChangesStatus: boolean;
   public ingredientListUpdated = new Subject<Ingredient[]>();
 
   constructor(
@@ -33,7 +33,7 @@ export class ShoppingListService {
       throw("Ingredient already exists.");
     }
     this.ingredients[ingredient.name] = ingredient;
-    this.unsavedChanges = true;
+    this.unsavedChangesStatus = true;
     this.ingredientListUpdated.next(this.getLocalIngredients());
   }
 
@@ -50,33 +50,72 @@ export class ShoppingListService {
       delete this.ingredients[oldKey];
     }
     this.ingredients[newIngredient.name] = newIngredient;
-    this.unsavedChanges = true;
+    this.unsavedChangesStatus = true;
     this.ingredientListUpdated.next(this.getLocalIngredients());
   }
 
   deleteLocalIngredient(key: string){
     delete this.ingredients[key];
-    this.unsavedChanges = true;
+    this.unsavedChangesStatus = true;
     this.ingredientListUpdated.next(this.getLocalIngredients());    
   }
 
-  getUnsavedChanges(){
-    return this.unsavedChanges;
+  getUnsavedChangesStatus(){
+    return this.unsavedChangesStatus;
   }
 
   getIngredients(){
+
+    /*
+    - If user is logged in
+      - If there's a non-empty cached version, and there are no unsaved changes, return the cached version.
+      - Get user's shopping list from database:
+        - If the user already has a non-empty shopping list, and there's also a non-empty cached temporary shopping list, throw an error.
+        - Else, return either the user's list if it's non-empty, the existing cache, or an empty object (in that priority).
+
+    - If user is guest
+      - If there is no cached version already, set it to an empty object.
+      - Return the cache.
+
+    */
+    
     return this.authService.getLatestAuthState().flatMap(
-      authState => {
-        const ownerId = authState.userId;
-        if (!ownerId){
-          this.ingredients = [];
-          return Observable.of([]);
+      ({userId}) => {
+        
+        //If user is logged in
+        if (userId){
+
+          //If there's a non-empty cached version, and there are no unsaved changes, return the cached version
+          if (this.ingredients && Object.keys(this.ingredients).length > 0 && !this.unsavedChangesStatus){
+            return Observable.of(this.ingredients);
+          }
+
+          //Gets the shopping list of the user
+          return this.httpClient.get(`https://ng-recipes-1sv94.firebaseio.com/shoppingLists/byOwnerId/${userId}.json`)
+            .map( userIngredients => userIngredients || {})
+            .map( userIngredients => {
+              
+              //If the user already has a non-empty shopping list, and there's also a non-empty cached temporary shopping list, throw an error
+              let userIngredientsLength = Object.keys(userIngredients).length;
+              if (userIngredientsLength > 0 && this.ingredients && Object.keys(this.ingredients).length > 0){
+                throw("Shopping lists conflict.");
+              
+              //Else, return either the user's list if it's non-empty, the existing cache, or an empty object (in that priority)
+              }else{
+                this.ingredients = (userIngredientsLength > 0) ? userIngredients : (this.ingredients || {});
+                return this.ingredients;
+              }
+            });
+
+        //If user is guest (not logged in)
+        }else{
+
+          //If there is no cached version already, set it to an empty object
+          if (!this.ingredients){
+            this.ingredients = {};
+          }
+          return Observable.of(this.ingredients);
         }
-        return this.httpClient.get(`https://ng-recipes-1sv94.firebaseio.com/shoppingLists/byOwnerId/${ownerId}.json`)
-          .map( ingredients => {
-            this.ingredients = ingredients;
-            return ingredients;
-          });
       }
     );
   }
@@ -90,7 +129,7 @@ export class ShoppingListService {
         }
         return this.httpClient.put(`https://ng-recipes-1sv94.firebaseio.com/shoppingLists/byOwnerId/${ownerId}.json`, this.ingredients)
         .map( ingredients => {
-          this.unsavedChanges = false;
+          this.unsavedChangesStatus = false;
           return ingredients;
         });
       }

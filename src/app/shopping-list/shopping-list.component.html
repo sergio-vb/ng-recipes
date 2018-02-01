@@ -3,7 +3,7 @@
     <h3 class="shopping-list-title">Shopping List</h3>
     <button 
       (click)="onSaveList()"
-      [disabled]="!unsavedChanges"
+      [disabled]="!unsavedChangesStatus"
       class="waves-effect waves-light btn orange save-changes" 
       type="text" 
     >
@@ -31,3 +31,10 @@
     </div>
   </div>
 </section>
+
+<app-confirmation-modal
+  [config]="modalConfig"
+  [(isVisible)]="isModalOpen"
+  (leftButtonClick)="onModalRegister()"
+  (rightButtonClick)="onModalLogin()"
+></app-confirmation-modal>

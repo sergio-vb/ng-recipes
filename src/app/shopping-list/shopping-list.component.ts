@@ -1,7 +1,10 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Router } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 
 import { Ingredient } from '../shared/ingredient.model';
+import { ModalConfig } from '../shared/modal-config.model';
+
 import { ShoppingListService } from './shopping-list.service';
 
 @Component({
@@ -12,12 +15,27 @@ import { ShoppingListService } from './shopping-list.service';
 export class ShoppingListComponent implements OnInit, OnDestroy {
   private subscription: Subscription;
   public ingredients: any;
+  public isModalOpen: boolean;
   public itemSelected: string;
-  public unsavedChanges: boolean;
+  public modalConfig: ModalConfig;
+  public unsavedChangesStatus: boolean;
 
-  constructor(private shoppingListService: ShoppingListService) {}
+  constructor(
+    private shoppingListService: ShoppingListService,
+    private router: Router
+  ) {}
 
   ngOnInit() {
+
+    this.isModalOpen = false;
+    this.modalConfig = {
+      mainText: "Please log in or register to save your shopping list.",
+      leftButtonText: "Register",
+      rightButtonText: "Log In",
+      leftButtonStyles: "btn",
+      rightButtonStyles: "btn"
+    }
+
     this.shoppingListService.getIngredients().subscribe(
       ingredients => {
         console.log("Ingredients received:", ingredients);
@@ -28,10 +46,13 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
       }
     );
 
+    this.unsavedChangesStatus = this.shoppingListService.getUnsavedChangesStatus();
+
     this.subscription = this.shoppingListService.ingredientListUpdated.subscribe(
       (ingredients) => {
         console.log("Shopping list received ingredients updated:", ingredients);
-        this.unsavedChanges = this.shoppingListService.getUnsavedChanges();
+        this.unsavedChangesStatus = this.shoppingListService.getUnsavedChangesStatus();
+        console.log("UnsavedChangesStatus:", this.unsavedChangesStatus);
         this.ingredients = ingredients;
       }
     );
@@ -44,10 +65,12 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   onSaveList(){
     this.shoppingListService.saveIngredients().subscribe(
       success => {
-        this.unsavedChanges = this.shoppingListService.getUnsavedChanges();
+        this.unsavedChangesStatus = this.shoppingListService.getUnsavedChangesStatus();
       },
       error => {
-        console.log("Save ingredients error:", error);
+        if (error === "User not logged in."){
+          this.isModalOpen = true;
+        }
       }
     );
   }
@@ -56,4 +79,13 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     console.log("Shopping list destroyed");
     this.subscription.unsubscribe();
   }
+
+  onModalRegister(){
+    this.router.navigate(['/signup']);
+  }
+
+  onModalLogin(){
+    this.router.navigate(['/signin']);    
+  }
+
 }
