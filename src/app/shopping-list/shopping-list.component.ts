@@ -6,6 +6,7 @@ import { Ingredient } from '../shared/ingredient.model';
 import { OptionalActionModalConfig } from '../shared/optional-action-modal-config.model';
 
 import { ShoppingListService } from './shopping-list.service';
+import { RequiredActionModalConfig } from '../shared/required-action-modal-config.model';
 
 @Component({
   selector: 'app-shopping-list',
@@ -15,10 +16,14 @@ import { ShoppingListService } from './shopping-list.service';
 export class ShoppingListComponent implements OnInit, OnDestroy {
   private subscription: Subscription;
   public ingredients: any;
-  public isModalOpen: boolean;
   public itemSelected: string;
-  public modalConfig: OptionalActionModalConfig;
   public unsavedChangesStatus: boolean;
+  
+  public isSaveListModalOpen: boolean;
+  public saveListModalConfig: OptionalActionModalConfig;
+  
+  public isListConflictModalOpen: boolean;
+  public listConflictModalConfig: RequiredActionModalConfig;
 
   constructor(
     private shoppingListService: ShoppingListService,
@@ -27,14 +32,40 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    this.isModalOpen = false;
-    this.modalConfig = {
+    this.isSaveListModalOpen = false;
+    this.saveListModalConfig = {
       mainText: "Please log in or register to save your shopping list.",
       leftButtonText: "Register",
       rightButtonText: "Log In",
       leftButtonStyles: "btn",
       rightButtonStyles: "btn"
     }
+
+    this.isListConflictModalOpen = false;
+    this.listConflictModalConfig = {
+      mainText: "You have a saved shopping list and an unsaved list. Do you want to merge them together?",
+      buttons: [
+        {
+          text: "Keep unsaved only",
+          styles: "btn single-column-btn"
+        },
+        {
+          text: "Keep saved only",
+          styles: "btn single-column-btn"
+        },
+        {
+          text: "Keep both and merge",
+          styles: "btn single-column-btn"
+        }
+      ]
+    };
+
+    /* Second modal:
+      You have a saved shopping list and an unsaved list. Do you want to merge them together?
+        Merge them together (Recommended)
+        Keep only the unsaved list
+        Keep only the saved list
+    */
 
     this.shoppingListService.getIngredients().subscribe(
       ingredients => {
@@ -43,6 +74,9 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
       },
       error => {
         console.log("getIngredients error:", error);
+        if (error === "Shopping lists conflict."){
+          this.isListConflictModalOpen = true;
+        }
       }
     );
 
@@ -69,7 +103,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
       },
       error => {
         if (error === "User not logged in."){
-          this.isModalOpen = true;
+          this.isSaveListModalOpen = true;
         }
       }
     );
@@ -86,6 +120,10 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
 
   onModalLogin(){
     this.router.navigate(['/signin']);    
+  }
+
+  onListConflictModalClick(buttonIndex: number){
+    console.log("Button clicked:", buttonIndex);
   }
 
 }

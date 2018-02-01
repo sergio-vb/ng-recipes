@@ -4,12 +4,14 @@ import { CommonModule } from '@angular/common';
 import { DropdownDirective } from './dropdown.directive';
 import { OptionalActionModalComponent } from './optional-action-modal/optional-action-modal.component';
 import { ObjectKeys } from './object-keys.pipe';
+import { RequiredActionModalComponent } from './required-action-modal/required-action-modal.component';
 
 @NgModule({
     declarations: [
         DropdownDirective, 
         OptionalActionModalComponent,
-        ObjectKeys
+        ObjectKeys,
+        RequiredActionModalComponent
     ],
     imports: [
         CommonModule
@@ -18,6 +20,7 @@ import { ObjectKeys } from './object-keys.pipe';
         CommonModule, /* common directives, ngClass, ngFor, ngIf */
         DropdownDirective,
         OptionalActionModalComponent,
+        RequiredActionModalComponent,
         ObjectKeys
     ]
 })

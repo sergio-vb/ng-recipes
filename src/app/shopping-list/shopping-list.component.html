@@ -33,8 +33,14 @@
 </section>
 
 <app-optional-action-modal
-  [config]="modalConfig"
-  [(isVisible)]="isModalOpen"
+  [config]="saveListModalConfig"
+  [(isVisible)]="isSaveListModalOpen"
   (leftButtonClick)="onModalRegister()"
   (rightButtonClick)="onModalLogin()"
 ></app-optional-action-modal>
+
+<app-required-action-modal
+  [config]="listConflictModalConfig"
+  [isVisible]="isListConflictModalOpen"
+  (buttonClick)="onListConflictModalClick($event)"
+></app-required-action-modal>

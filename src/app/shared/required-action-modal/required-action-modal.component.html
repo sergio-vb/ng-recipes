@@ -1,0 +1,11 @@
+<div class="required-action-modal" [ngClass]="{active: isVisible}">
+  <div class="card-panel">
+    <p>{{config.mainText}}</p>
+    <a *ngFor="let button of config.buttons; let i = index"
+      class="waves-effect waves-light {{button.styles}}" 
+      (click)="onButtonClick(i)"
+    >
+      {{button.text}}
+    </a>
+  </div>
+</div>
