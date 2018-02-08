@@ -162,6 +162,7 @@ export class ShoppingListService implements OnDestroy{
         if (!userId){
           throw("User not logged in.");
         }
+        //If user is authenticated, get their shopping list from backend
         return this.httpClient.get(`https://ng-recipes-1sv94.firebaseio.com/shoppingLists/byOwnerId/${userId}.json`)
           .map( userIngredients => userIngredients || {})
           .map( userIngredients => {
@@ -176,8 +177,16 @@ export class ShoppingListService implements OnDestroy{
                 this.ingredients[key] = userIngredients[key];
               }
             });
-            this.unsavedChangesStatus = false;
+            this.unsavedChangesStatus = true;
             return this.ingredients;
+          })
+          //Save the new merged list to the database
+          .flatMap( userIngredients => {
+            return this.httpClient.put(`https://ng-recipes-1sv94.firebaseio.com/shoppingLists/byOwnerId/${userId}.json`, this.ingredients)
+              .map( ingredients => {
+                this.unsavedChangesStatus = false;
+                return ingredients;
+              });
           });
       }
     );
