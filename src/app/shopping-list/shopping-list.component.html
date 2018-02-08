@@ -44,3 +44,9 @@
   [isVisible]="isListConflictModalOpen"
   (buttonClick)="onListConflictModalClick($event)"
 ></app-required-action-modal>
+
+<app-required-action-modal
+  [config]="canDeactivateModalConfig"
+  [isVisible]="isCanDeactivateModalOpen"
+  (buttonClick)="onCanDeactivateModalClick($event)"
+></app-required-action-modal>

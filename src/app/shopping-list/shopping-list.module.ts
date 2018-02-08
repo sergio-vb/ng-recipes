@@ -5,6 +5,7 @@ import { RouterModule } from '@angular/router';
 
 import { SharedModule } from '../shared/shared.module';
 
+import { CanDeactivateGuard } from '../shared/can-deactivate-guard.service';
 import { ShoppingListComponent } from './shopping-list.component';
 import { ShoppingListEditComponent } from './shopping-list-edit/shopping-list-edit.component';
 
@@ -20,6 +21,7 @@ import { ShoppingListEditComponent } from './shopping-list-edit/shopping-list-ed
         ReactiveFormsModule,
         RouterModule,
         SharedModule
-    ]
+    ],
+    providers:[CanDeactivateGuard]
 })
 export class ShoppingListModule{}

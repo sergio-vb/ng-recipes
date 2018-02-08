@@ -1,12 +1,16 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
+import { Observable } from 'rxjs/Observable';
+import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
 
 import { Ingredient } from '../shared/ingredient.model';
 import { OptionalActionModalConfig } from '../shared/optional-action-modal-config.model';
-
-import { ShoppingListService } from './shopping-list.service';
 import { RequiredActionModalConfig } from '../shared/required-action-modal-config.model';
+
+import { AuthService } from '../auth/auth.service';
+import { ShoppingListService } from './shopping-list.service';
+
 
 @Component({
   selector: 'app-shopping-list',
@@ -19,13 +23,17 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   public itemSelected: string;
   public unsavedChangesStatus: boolean;
   
+  //Modals
   public isSaveListModalOpen: boolean;
   public saveListModalConfig: OptionalActionModalConfig;
-  
   public isListConflictModalOpen: boolean;
   public listConflictModalConfig: RequiredActionModalConfig;
-
+  public isCanDeactivateModalOpen: boolean;
+  public canDeactivateModalConfig: RequiredActionModalConfig;
+  private canDeactivateSubject: Subject<boolean>;
+  
   constructor(
+    private authService: AuthService,
     private shoppingListService: ShoppingListService,
     private router: Router
   ) {}
@@ -71,7 +79,22 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
           text: "Keep saved only",
           styles: "btn orange single-column-btn"
         },
-        
+      ]
+    };
+
+    this.canDeactivateSubject = new Subject();
+    this.isCanDeactivateModalOpen = false;
+    this.canDeactivateModalConfig = {
+      mainText: "You have unsaved items in your shopping list. Do you want to leave this page?",
+      buttons: [
+        {
+          text: "Go back",
+          styles: "btn"
+        },
+        {
+          text: "Leave",
+          styles: "btn"
+        }
       ]
     };
   }
@@ -141,8 +164,8 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
       case 1:
         this.shoppingListService.saveIngredients().subscribe(
           success => {
-            this.unsavedChangesStatus = this.shoppingListService.getUnsavedChangesStatus();
             this.isListConflictModalOpen = false;
+            this.unsavedChangesStatus = this.shoppingListService.getUnsavedChangesStatus();
           }
         );
         break;
@@ -154,6 +177,29 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
         break;
       
     }
+  }
+
+  canDeactivate(){
+    return this.authService.getLatestAuthState().flatMap(
+      ({userId}) => {
+        if (userId && this.unsavedChangesStatus){
+          this.isCanDeactivateModalOpen = true;
+          return this.canDeactivateSubject;
+        }else{
+          return Observable.of(true);
+        }
+      }
+    );
+  }
+  onCanDeactivateModalClick(buttonIndex: number){
+    switch (buttonIndex){
+      case 0:
+        this.canDeactivateSubject.next(false);
+        break;
+      default:
+        this.canDeactivateSubject.next(true);
+    }
+    this.isCanDeactivateModalOpen = false;    
   }
 
 }

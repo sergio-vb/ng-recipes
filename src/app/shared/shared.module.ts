@@ -5,6 +5,7 @@ import { DropdownDirective } from './dropdown.directive';
 import { OptionalActionModalComponent } from './optional-action-modal/optional-action-modal.component';
 import { ObjectKeys } from './object-keys.pipe';
 import { RequiredActionModalComponent } from './required-action-modal/required-action-modal.component';
+import { CanDeactivateGuard } from './can-deactivate-guard.service';
 
 @NgModule({
     declarations: [
