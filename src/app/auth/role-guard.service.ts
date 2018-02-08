@@ -39,7 +39,7 @@ export class RoleGuard implements CanActivate{
                 }
                 return userInfo.userId;
             })
-            //Gets from a promise whether current user owns the recipe, redirecting if they don't
+            //Gets whether current user owns the recipe, redirecting if they don't
             .flatMap( userId => {
                 return this.recipeService.doesRecipeBelongToUser(activatedRouteSnapshot.params.id, null)
                     .map( isUserOwner => {
