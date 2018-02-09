@@ -17,7 +17,7 @@ import { ShoppingListService } from '../../shopping-list/shopping-list.service';
 export class RecipeDetailComponent implements OnInit {
   error: any;
   id: string;
-  ingredients: Ingredient[];
+  ingredients: any;
   recipe: Recipe;
   userOwnsRecipe: boolean;
   isConfirmationOpen: boolean;
@@ -57,10 +57,11 @@ export class RecipeDetailComponent implements OnInit {
             
             //Gets recipe ingredients
             const ingredientsResponse = await this.recipeService.getRecipeIngredients(this.id).toPromise();
-            this.ingredients = [];
-            for (let id in ingredientsResponse){
-              this.ingredients.push(ingredientsResponse[id]);
-            }
+            // this.ingredients = [];
+            // for (let id in ingredientsResponse){
+            //   this.ingredients.push(ingredientsResponse[id]);
+            // }
+            this.ingredients = ingredientsResponse;
 
             //Sets option to enable Edit and Delete if user is owner
             this.userOwnsRecipe = await this.recipeService.doesRecipeBelongToUser(this.id, this.recipe).toPromise(); //Only interested in first value, not on-going subscription
@@ -76,7 +77,12 @@ export class RecipeDetailComponent implements OnInit {
   }
 
   onAddToShoppingList() {
-    //this.shoppingListService.addIngredients(this.recipe.ingredients);
+    console.log("Ingredients from Recipe: \n", this.ingredients);
+    this.shoppingListService.addIngredientsFromRecipe(this.ingredients).subscribe(
+      response => {
+        console.log("Ingredients added to shopping list successfully");
+      }
+    );
   }
 
   onDeleteRecipe(){

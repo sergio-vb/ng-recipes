@@ -151,7 +151,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
 
       //Keep both lists and merge them together
       case 0:
-        this.shoppingListService.mergeLists().subscribe(
+        this.shoppingListService.mergeListsAndSave().subscribe(
           ingredients => {
             this.ingredients = ingredients;
             this.isListConflictModalOpen = false;
