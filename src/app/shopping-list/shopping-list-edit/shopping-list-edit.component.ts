@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, OnDestroy, OnChanges } from '@angular/core';
+import { Component, Input, Output, OnInit, OnDestroy, OnChanges, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs/Subscription';
 
@@ -14,6 +14,7 @@ import { ShoppingListService } from '../shopping-list.service';
 })
 export class ShoppingListEditComponent implements OnInit, OnChanges {
   @Input() editedItemKey: string;
+  @Output() editedItemKeyChange = new EventEmitter<string>();
   editMode = false;
   editedItem: Ingredient;
   ingredientForm: FormGroup;
@@ -95,6 +96,7 @@ export class ShoppingListEditComponent implements OnInit, OnChanges {
     this.ingredientForm.reset();
     this.editMode = false;
     this.editedItemKey = "";
+    this.editedItemKeyChange.emit(this.editedItemKey);
     this.editedItem = null;
   }
 

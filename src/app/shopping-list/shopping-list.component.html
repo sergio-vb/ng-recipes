@@ -16,7 +16,7 @@
       <li><a class="clickable" routerLink="/signup">Register</a> or <a class="clickable" routerLink="/signin">log in</a> to save your shopping list to your profile!</li>      
     </ul>
 
-    <app-shopping-list-edit [editedItemKey]="itemSelected"></app-shopping-list-edit>
+    <app-shopping-list-edit [(editedItemKey)]="itemSelected"></app-shopping-list-edit>
     
     <p class="shopping-list-empty" *ngIf="(ingredients | objectKeys).length === 0">You don't have any ingredients in your shopping list yet.</p>
     <div class="collection">
