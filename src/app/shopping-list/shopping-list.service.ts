@@ -12,7 +12,7 @@ import { AuthService } from '../auth/auth.service';
 export class ShoppingListService implements OnDestroy{
   private ingredients: any;
   private unsavedChangesStatus: boolean;
-  private remoteDataInitialized: boolean;
+  private remoteListLoaded: boolean;
   public ingredientListUpdated = new Subject<Ingredient[]>();
   private authStateSubscription: Subscription;
 
@@ -24,10 +24,10 @@ export class ShoppingListService implements OnDestroy{
   }
 
   init(){
-    this.remoteDataInitialized = false;
+    this.remoteListLoaded = false;
     this.authStateSubscription = this.authService.getAuthState().subscribe(
       ({userId}) => {
-        if (!userId){
+        if (!userId){ //When user logs out
           this.resetCache();
         }
       }
@@ -37,7 +37,7 @@ export class ShoppingListService implements OnDestroy{
   resetCache(){
     this.ingredients = {};
     this.unsavedChangesStatus = false;
-    this.remoteDataInitialized = false;
+    this.remoteListLoaded = false;
   }
 
   ngOnDestroy(){
@@ -86,9 +86,10 @@ export class ShoppingListService implements OnDestroy{
   // - If there are any ingredients that already exist in the shopping list they will be automatically merged.
   addIngredientsFromRecipe(ingredients: any) {
     this.ingredients = this.mergeLists(this.ingredients, ingredients);
+    this.unsavedChangesStatus = true;
     
     //If the cache already included the user's saved shopping list, just overwrite it with the new one
-    if (this.remoteDataInitialized){
+    if (this.remoteListLoaded){
       return this.saveIngredients();
     //else, the cache version needs to be merged with the user's shopping list. For guests, the merge won't do anything.
     }else{
@@ -104,9 +105,12 @@ export class ShoppingListService implements OnDestroy{
 
   }
 
-  //Returns either the temporary shopping list or the user's list saved in the database.
-  // - If there is a conflict (any difference) between these two, the method will throw an error, to be handled by the consumer.
-  // - Use the method mergeListsAndSave() to merge the two lists together.
+  //Returns the appropriate shopping list:
+  // - If user is a guest, return the temporary shopping list
+  // - If user is logged in and their list had been previously loaded into the cache, return the cache
+  // - If user is logged in and their list hadn't been previously loaded into the cache, compare the cache version with the
+  //   user's saved version. If there is a conflict (any difference) between these two, the method will throw an error, 
+  //   to be handled by the consumer.
   getIngredients(){
 
     return this.authService.getLatestAuthState().flatMap(
@@ -116,7 +120,12 @@ export class ShoppingListService implements OnDestroy{
         if (userId){
 
           //If there's a non-empty cached version, and there are no unsaved changes, return the cached version
-          if (this.ingredients && Object.keys(this.ingredients).length > 0 && !this.unsavedChangesStatus){
+          // if (this.ingredients && Object.keys(this.ingredients).length > 0 && !this.unsavedChangesStatus){
+          //   return Observable.of(this.ingredients);
+          // }
+
+          //No need to fetch the user's list from the database if it's currently present in the cache
+          if (this.remoteListLoaded){
             return Observable.of(this.ingredients);
           }
 
@@ -133,7 +142,7 @@ export class ShoppingListService implements OnDestroy{
               //Else, return either the user's list if it's non-empty, the existing cache, or an empty object (in that priority)
               }else{
                 this.ingredients = (userIngredientsLength > 0) ? userIngredients : (this.ingredients || {});
-                this.remoteDataInitialized = true;
+                this.remoteListLoaded = true;
                 return this.ingredients;
               }
             });
@@ -200,7 +209,7 @@ export class ShoppingListService implements OnDestroy{
           .map( userIngredients => {
             this.ingredients = this.mergeLists(this.ingredients, userIngredients);
             this.unsavedChangesStatus = true;
-            this.remoteDataInitialized = true;
+            this.remoteListLoaded = true;
             return this.ingredients;
           })
           //Save the new merged list to the database
