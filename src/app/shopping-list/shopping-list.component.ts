@@ -89,11 +89,11 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
       buttons: [
         {
           text: "Go back",
-          styles: "btn"
+          styles: "btn btn-flat"
         },
         {
           text: "Leave",
-          styles: "btn"
+          styles: "btn warning"
         }
       ]
     };
