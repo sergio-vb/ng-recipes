@@ -10,11 +10,11 @@ import { AuthService } from '../auth/auth.service';
 
 @Injectable()
 export class ShoppingListService implements OnDestroy{
-  private ingredients: any;
-  private unsavedChangesStatus: boolean;
-  private remoteListLoaded: boolean;
-  public ingredientListUpdated = new Subject<Ingredient[]>();
   private authStateSubscription: Subscription;
+  private hasUnsavedChanges: boolean;
+  private isRemoteListLoaded: boolean;
+  private temporaryCachedShoppingList: any;
+  public shoppingListChange = new Subject<Ingredient[]>();
 
   constructor(
     private httpClient: HttpClient,
@@ -24,7 +24,7 @@ export class ShoppingListService implements OnDestroy{
   }
 
   init(){
-    this.remoteListLoaded = false;
+    this.isRemoteListLoaded = false;
     this.authStateSubscription = this.authService.getAuthState().subscribe(
       ({userId}) => {
         if (!userId){ //When user logs out
@@ -35,9 +35,9 @@ export class ShoppingListService implements OnDestroy{
   }
 
   resetCache(){
-    this.ingredients = {};
-    this.unsavedChangesStatus = false;
-    this.remoteListLoaded = false;
+    this.temporaryCachedShoppingList = {};
+    this.hasUnsavedChanges = false;
+    this.isRemoteListLoaded = false;
   }
 
   ngOnDestroy(){
@@ -45,58 +45,59 @@ export class ShoppingListService implements OnDestroy{
   }
 
   getLocalIngredient(key: string) {
-    return Object.assign({}, this.ingredients[key]); //Returns a copy, to avoid giving a direct reference to the object
+    return Object.assign({}, this.temporaryCachedShoppingList[key]); //Returns a copy, to avoid giving a direct reference to the object
   }
 
-  getLocalIngredients() {
-    return Object.assign({}, this.ingredients); //Returns a copy, to avoid giving a direct reference to the object
+  //Use getShoppingList() as the public API
+  private getLocalIngredients() {
+    return Object.assign({}, this.temporaryCachedShoppingList); //Returns a copy, to avoid giving a direct reference to the object (keep in mind it's just a shallow copy)
   }
 
   addLocalIngredient(ingredient: Ingredient) {
-    if (this.ingredients[ingredient.name]){
+    if (this.temporaryCachedShoppingList[ingredient.name]){
       throw("Ingredient already exists.");
     }
-    this.ingredients[ingredient.name] = ingredient;
-    this.unsavedChangesStatus = true;
-    this.ingredientListUpdated.next(this.getLocalIngredients());
+    this.temporaryCachedShoppingList[ingredient.name] = ingredient;
+    this.hasUnsavedChanges = true;
+    this.shoppingListChange.next(this.getLocalIngredients());
   }
 
   updateLocalIngredient(oldKey: string, newIngredient: Ingredient){
     if (oldKey != newIngredient.name){
-      delete this.ingredients[oldKey];
+      delete this.temporaryCachedShoppingList[oldKey];
     }
-    this.ingredients[newIngredient.name] = newIngredient;
-    this.unsavedChangesStatus = true;
-    this.ingredientListUpdated.next(this.getLocalIngredients());
+    this.temporaryCachedShoppingList[newIngredient.name] = newIngredient;
+    this.hasUnsavedChanges = true;
+    this.shoppingListChange.next(this.getLocalIngredients());
   }
 
   deleteLocalIngredient(key: string){
-    delete this.ingredients[key];
-    this.unsavedChangesStatus = true;
-    this.ingredientListUpdated.next(this.getLocalIngredients());    
+    delete this.temporaryCachedShoppingList[key];
+    this.hasUnsavedChanges = true;
+    this.shoppingListChange.next(this.getLocalIngredients());    
   }
 
-  getUnsavedChangesStatus(){
-    return this.unsavedChangesStatus;
+  getHasUnsavedChanges(){
+    return this.hasUnsavedChanges;
   }
 
   //Adds the ingredients of a Recipe to the shopping list of a user. 
-  // - If the user is logged in will be saved to their profile automatically.
+  // - If the user is logged in it will be saved to their profile automatically.
   // - If the user is a guest it'll only be saved to the temporary shopping list.
   // - If there are any ingredients that already exist in the shopping list they will be automatically merged.
   addIngredientsFromRecipe(ingredients: any) {
-    this.ingredients = this.mergeLists(this.ingredients, ingredients);
-    this.unsavedChangesStatus = true;
+    this.temporaryCachedShoppingList = this.mergeLists(this.temporaryCachedShoppingList, ingredients);
+    this.hasUnsavedChanges = true;
     
     //If the cache already included the user's saved shopping list, just overwrite it with the new one
-    if (this.remoteListLoaded){
-      return this.saveIngredients();
+    if (this.isRemoteListLoaded){
+      return this.saveShoppingList();
     //else, the cache version needs to be merged with the user's shopping list. For guests, the merge won't do anything.
     }else{
       return this.mergeListsAndSave().catch(
         error => {
           if (error === "User not logged in."){ //Catches this error because this is an expected scenario for this functionality
-            return Observable.of(this.ingredients);
+            return Observable.of(this.temporaryCachedShoppingList);
           }
           throw(error);
         }
@@ -111,7 +112,7 @@ export class ShoppingListService implements OnDestroy{
   // - If user is logged in and their list hadn't been previously loaded into the cache, compare the cache version with the
   //   user's saved version. If there is a conflict (any difference) between these two, the method will throw an error, 
   //   to be handled by the consumer.
-  getIngredients(){
+  getShoppingList(){
 
     return this.authService.getLatestAuthState().flatMap(
       ({userId}) => {
@@ -120,13 +121,13 @@ export class ShoppingListService implements OnDestroy{
         if (userId){
 
           //If there's a non-empty cached version, and there are no unsaved changes, return the cached version
-          // if (this.ingredients && Object.keys(this.ingredients).length > 0 && !this.unsavedChangesStatus){
-          //   return Observable.of(this.ingredients);
+          // if (this.temporaryCachedShoppingList && Object.keys(this.temporaryCachedShoppingList).length > 0 && !this.hasUnsavedChanges){
+          //   return Observable.of(this.temporaryCachedShoppingList);
           // }
 
           //No need to fetch the user's list from the database if it's currently present in the cache
-          if (this.remoteListLoaded){
-            return Observable.of(this.ingredients);
+          if (this.isRemoteListLoaded){
+            return Observable.of(this.temporaryCachedShoppingList);
           }
 
           //Gets the shopping list of the user
@@ -136,14 +137,14 @@ export class ShoppingListService implements OnDestroy{
               
               //If the user already has a non-empty shopping list, and there's also a non-empty cached temporary shopping list, throw an error
               let userIngredientsLength = Object.keys(userIngredients).length;
-              if (userIngredientsLength > 0 && this.ingredients && Object.keys(this.ingredients).length > 0){
+              if (userIngredientsLength > 0 && this.temporaryCachedShoppingList && Object.keys(this.temporaryCachedShoppingList).length > 0){
                 throw("Shopping lists conflict.");
               
               //Else, return either the user's list if it's non-empty, the existing cache, or an empty object (in that priority)
               }else{
-                this.ingredients = (userIngredientsLength > 0) ? userIngredients : (this.ingredients || {});
-                this.remoteListLoaded = true;
-                return this.ingredients;
+                this.temporaryCachedShoppingList = (userIngredientsLength > 0) ? userIngredients : (this.temporaryCachedShoppingList || {});
+                this.isRemoteListLoaded = true;
+                return this.temporaryCachedShoppingList;
               }
             });
 
@@ -151,10 +152,10 @@ export class ShoppingListService implements OnDestroy{
         }else{
 
           //If there is no cached version already, set it to an empty object
-          if (!this.ingredients){
-            this.ingredients = {};
+          if (!this.temporaryCachedShoppingList){
+            this.temporaryCachedShoppingList = {};
           }
-          return Observable.of(this.ingredients);
+          return Observable.of(this.temporaryCachedShoppingList);
         }
       }
     );
@@ -162,22 +163,22 @@ export class ShoppingListService implements OnDestroy{
   
 
   //Saves the cached shopping list to the backend, overwriting it
-  saveIngredients(){
+  saveShoppingList(){
     return this.authService.getLatestAuthState().flatMap(
       ({userId}) => {
         if (!userId){
           throw("User not logged in.");
         }
-        return this.httpClient.put(`https://ng-recipes-1sv94.firebaseio.com/shoppingLists/byOwnerId/${userId}.json`, this.ingredients)
+        return this.httpClient.put(`https://ng-recipes-1sv94.firebaseio.com/shoppingLists/byOwnerId/${userId}.json`, this.temporaryCachedShoppingList)
           .map( ingredients => {
-            this.unsavedChangesStatus = false;
+            this.hasUnsavedChanges = false;
             return ingredients;
           });
       }
     );
   }
 
-  //Merges two lists and returns the merged list (shallow copy)
+  //Merges two shopping lists and returns the merged list (shallow copy)
   mergeLists(list1: any, list2: any){
     let mergedList = {};
     Object.assign(mergedList, list1);
@@ -207,16 +208,16 @@ export class ShoppingListService implements OnDestroy{
         return this.httpClient.get(`https://ng-recipes-1sv94.firebaseio.com/shoppingLists/byOwnerId/${userId}.json`)
           .map( userIngredients => userIngredients || {})
           .map( userIngredients => {
-            this.ingredients = this.mergeLists(this.ingredients, userIngredients);
-            this.unsavedChangesStatus = true;
-            this.remoteListLoaded = true;
-            return this.ingredients;
+            this.temporaryCachedShoppingList = this.mergeLists(this.temporaryCachedShoppingList, userIngredients);
+            this.hasUnsavedChanges = true;
+            this.isRemoteListLoaded = true;
+            return this.temporaryCachedShoppingList;
           })
           //Save the new merged list to the database
           .flatMap( userIngredients => {
-            return this.httpClient.put(`https://ng-recipes-1sv94.firebaseio.com/shoppingLists/byOwnerId/${userId}.json`, this.ingredients)
+            return this.httpClient.put(`https://ng-recipes-1sv94.firebaseio.com/shoppingLists/byOwnerId/${userId}.json`, this.temporaryCachedShoppingList)
               .map( ingredients => {
-                this.unsavedChangesStatus = false;
+                this.hasUnsavedChanges = false;
                 return ingredients;
               });
           });

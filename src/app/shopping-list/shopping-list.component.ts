@@ -43,10 +43,10 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     this.initializeModals();
     this.initializeData();
 
-    this.subscription = this.shoppingListService.ingredientListUpdated.subscribe(
+    this.subscription = this.shoppingListService.shoppingListChange.subscribe(
       (ingredients) => {
         console.log("Shopping list received ingredients updated:", ingredients);
-        this.unsavedChangesStatus = this.shoppingListService.getUnsavedChangesStatus();
+        this.unsavedChangesStatus = this.shoppingListService.getHasUnsavedChanges();
         console.log("UnsavedChangesStatus:", this.unsavedChangesStatus);
         this.ingredients = ingredients;
       }
@@ -100,15 +100,15 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   }
 
   initializeData(){
-    this.shoppingListService.getIngredients().subscribe(
+    this.shoppingListService.getShoppingList().subscribe(
       ingredients => {
         console.log("Ingredients received:", ingredients);
         this.ingredients = ingredients;
         this.isListConflictModalOpen = false;
-        this.unsavedChangesStatus = this.shoppingListService.getUnsavedChangesStatus();
+        this.unsavedChangesStatus = this.shoppingListService.getHasUnsavedChanges();
       },
       error => {
-        console.log("getIngredients error:", error);
+        console.log("getShoppingList error:", error);
         if (error === "Shopping lists conflict."){
           this.isListConflictModalOpen = true;
         }
@@ -121,9 +121,9 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   }
 
   onSaveList(){
-    this.shoppingListService.saveIngredients().subscribe(
+    this.shoppingListService.saveShoppingList().subscribe(
       success => {
-        this.unsavedChangesStatus = this.shoppingListService.getUnsavedChangesStatus();
+        this.unsavedChangesStatus = this.shoppingListService.getHasUnsavedChanges();
       },
       error => {
         if (error === "User not logged in."){
@@ -155,17 +155,17 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
           ingredients => {
             this.ingredients = ingredients;
             this.isListConflictModalOpen = false;
-            this.unsavedChangesStatus = this.shoppingListService.getUnsavedChangesStatus();        
+            this.unsavedChangesStatus = this.shoppingListService.getHasUnsavedChanges();        
           }
         );
         break;
       
       //Keep only the unsaved list: Saves the cached version, overwriting the previously saved list
       case 1:
-        this.shoppingListService.saveIngredients().subscribe(
+        this.shoppingListService.saveShoppingList().subscribe(
           success => {
             this.isListConflictModalOpen = false;
-            this.unsavedChangesStatus = this.shoppingListService.getUnsavedChangesStatus();
+            this.unsavedChangesStatus = this.shoppingListService.getHasUnsavedChanges();
           }
         );
         break;
