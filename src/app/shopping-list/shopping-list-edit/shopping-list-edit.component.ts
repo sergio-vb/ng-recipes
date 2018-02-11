@@ -3,7 +3,7 @@ import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs/Subscription';
 
 import { Ingredient } from '../../shared/ingredient.model';
-import { OptionalActionModalConfig } from '../../shared/optional-action-modal-config.model';
+import { ConfirmationModalConfig } from '../../shared/confirmation-modal-config.model';
 
 import { ShoppingListService } from '../shopping-list.service';
 
@@ -18,8 +18,8 @@ export class ShoppingListEditComponent implements OnInit, OnChanges {
   editMode = false;
   editedItem: Ingredient;
   ingredientForm: FormGroup;
-  isConfirmationOpen: boolean;
-  modalConfig: OptionalActionModalConfig;
+  isConfirmationModalOpen: boolean;
+  modalConfig: ConfirmationModalConfig;
   newIngredient: Ingredient;
 
   constructor(private shoppingListService: ShoppingListService) {}
@@ -33,13 +33,20 @@ export class ShoppingListEditComponent implements OnInit, OnChanges {
       ])
     });
 
-    this.isConfirmationOpen = false;
+    this.isConfirmationModalOpen = false;
     this.modalConfig = {
       mainText: "This ingredient already exists on your shopping list. Do you want to add the entered amount to the existing listing?",
-      leftButtonText: "Cancel",
-      rightButtonText: "Confirm",
-      leftButtonStyles: "btn-flat",
-      rightButtonStyles: "btn"
+      actionRequired: false,
+      buttons: [
+        {
+          text: "Cancel",
+          styles: "btn-flat"
+        },
+        {
+          text: "Confirm",
+          styles: "btn"
+        },
+      ]
     }
 
   }
@@ -69,19 +76,10 @@ export class ShoppingListEditComponent implements OnInit, OnChanges {
         this.shoppingListService.addLocalIngredient(this.newIngredient);
         this.resetEditMode();
       }catch(e){
-        this.isConfirmationOpen = true;
+        this.isConfirmationModalOpen = true;
       }
     }
     
-  }
-
-  onConfirmAddToExisting(){
-    //Gets the ingredient that has the same name as the new ingredient, and adds their amounts together
-    this.newIngredient.amount += this.shoppingListService.getLocalIngredient(this.newIngredient.name).amount;
-    
-    this.shoppingListService.updateLocalIngredient(this.editedItemKey, this.newIngredient);
-    this.resetEditMode();
-    this.isConfirmationOpen = false;
   }
 
   onClearForm(){
@@ -100,7 +98,18 @@ export class ShoppingListEditComponent implements OnInit, OnChanges {
     this.editedItem = null;
   }
 
-  onToggleConfirmation(){
-    this.isConfirmationOpen = !this.isConfirmationOpen;;
+  onConfirmationModalClick(buttonIndex: number){
+    switch (buttonIndex){
+      case 0:
+        this.isConfirmationModalOpen = !this.isConfirmationModalOpen;
+        break;
+      //Confirms that the ingredient should be added to the existing ingredient with the same name:
+      case 1:
+        this.newIngredient.amount += this.shoppingListService.getLocalIngredient(this.newIngredient.name).amount;
+        this.shoppingListService.updateLocalIngredient(this.editedItemKey, this.newIngredient);
+        this.resetEditMode();
+        this.isConfirmationModalOpen = false;
+        break;
+    }
   }
 }

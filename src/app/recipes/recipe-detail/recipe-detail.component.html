@@ -12,7 +12,7 @@
         <ul id="dropdown1" class="dropdown-content">
           <li><a class="clickable" (click)="onAddToShoppingList()">To Shopping List</a></li>
           <li *ngIf="userOwnsRecipe"><a class="clickable" routerLink="edit">Edit Recipe</a></li>
-          <li *ngIf="userOwnsRecipe"><a class="clickable" (click)="onToggleConfirmation()">Delete Recipe</a></li>
+          <li *ngIf="userOwnsRecipe"><a class="clickable" (click)="onToggleDeleteModal()">Delete Recipe</a></li>
         </ul>
       </div>
       
@@ -28,9 +28,8 @@
   <h5 class="title">Something went wrong, please try again.</h5>
 </div>
 
-<app-optional-action-modal
-  [config]="modalConfig"
-  [(isVisible)]="isConfirmationOpen"
-  (leftButtonClick)="onToggleConfirmation()"
-  (rightButtonClick)="onDeleteRecipe()"
-></app-optional-action-modal>
+<app-confirmation-modal
+  [config]="deleteModalConfig"
+  [(isVisible)]="isDeleteModalOpen"
+  (buttonClick)="onDeleteModalClick($event)"
+></app-confirmation-modal>

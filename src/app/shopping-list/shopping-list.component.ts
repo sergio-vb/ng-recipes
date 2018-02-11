@@ -4,9 +4,8 @@ import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
 
+import { ConfirmationModalConfig } from '../shared/confirmation-modal-config.model';
 import { Ingredient } from '../shared/ingredient.model';
-import { OptionalActionModalConfig } from '../shared/optional-action-modal-config.model';
-import { RequiredActionModalConfig } from '../shared/required-action-modal-config.model';
 
 import { AuthService } from '../auth/auth.service';
 import { ShoppingListService } from './shopping-list.service';
@@ -25,11 +24,11 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   
   //Modals
   public isSaveListModalOpen: boolean;
-  public saveListModalConfig: OptionalActionModalConfig;
+  public saveListModalConfig: ConfirmationModalConfig;
   public isListConflictModalOpen: boolean;
-  public listConflictModalConfig: RequiredActionModalConfig;
+  public listConflictModalConfig: ConfirmationModalConfig;
   public isCanDeactivateModalOpen: boolean;
-  public canDeactivateModalConfig: RequiredActionModalConfig;
+  public canDeactivateModalConfig: ConfirmationModalConfig;
   private canDeactivateSubject: Subject<boolean>;
   
   constructor(
@@ -57,15 +56,23 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     this.isSaveListModalOpen = false;
     this.saveListModalConfig = {
       mainText: "Please log in or register to save your shopping list.",
-      leftButtonText: "Register",
-      rightButtonText: "Log In",
-      leftButtonStyles: "btn",
-      rightButtonStyles: "btn"
+      actionRequired: false,
+      buttons: [
+        {
+          text: "Register",
+          styles: "btn"
+        },
+        {
+          text: "Log In",
+          styles: "btn"
+        },
+      ]
     }
 
     this.isListConflictModalOpen = false;
     this.listConflictModalConfig = {
       mainText: "You have a saved shopping list and an unsaved list. Do you want to merge them together?",
+      actionRequired: true,
       buttons: [
         {
           text: "Keep both and merge (Recommended)",
@@ -86,6 +93,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     this.isCanDeactivateModalOpen = false;
     this.canDeactivateModalConfig = {
       mainText: "You have unsaved items in your shopping list. Do you want to leave this page?",
+      actionRequired: true,
       buttons: [
         {
           text: "Go back",
@@ -138,12 +146,15 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  onModalRegister(){
-    this.router.navigate(['/signup']);
-  }
-
-  onModalLogin(){
-    this.router.navigate(['/signin']);    
+  onSaveListModalClick(buttonIndex: number){
+    switch (buttonIndex){
+      case 0:
+        this.router.navigate(['/signup']);
+        break;
+      case 1:
+        this.router.navigate(['/signin']);    
+        break;
+    }
   }
 
   onListConflictModalClick(buttonIndex: number){
@@ -196,8 +207,9 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
       case 0:
         this.canDeactivateSubject.next(false);
         break;
-      default:
+      case 1:
         this.canDeactivateSubject.next(true);
+        break;
     }
     this.isCanDeactivateModalOpen = false;    
   }

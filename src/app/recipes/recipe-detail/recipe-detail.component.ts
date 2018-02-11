@@ -2,7 +2,7 @@ import { Component, OnInit} from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 
 import { Ingredient } from '../../shared/ingredient.model';
-import { OptionalActionModalConfig } from '../../shared/optional-action-modal-config.model';
+import { ConfirmationModalConfig } from '../../shared/confirmation-modal-config.model';
 import { Recipe } from '../recipe.model';
 
 import { RecipeService } from '../recipe.service';
@@ -20,8 +20,8 @@ export class RecipeDetailComponent implements OnInit {
   ingredients: any;
   recipe: Recipe;
   userOwnsRecipe: boolean;
-  isConfirmationOpen: boolean;
-  modalConfig: OptionalActionModalConfig;
+  isDeleteModalOpen: boolean;
+  deleteModalConfig: ConfirmationModalConfig;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -32,14 +32,20 @@ export class RecipeDetailComponent implements OnInit {
 
   ngOnInit() {
 
-    this.isConfirmationOpen = false;
-
-    this.modalConfig = {
+    this.isDeleteModalOpen = false;
+    this.deleteModalConfig = {
       mainText: "Are you sure you want to delete this recipe? This cannot be undone.",
-      leftButtonText: "Cancel",
-      rightButtonText: "Delete",
-      leftButtonStyles: "btn-flat",
-      rightButtonStyles: "btn warning"
+      actionRequired: false,
+      buttons: [
+        {
+          text: "Cancel",
+          styles: "btn-flat"
+        },
+        {
+          text: "Delete",
+          styles: "btn warning"
+        },
+      ]
     }
 
     this.activatedRoute.params.subscribe(
@@ -85,21 +91,29 @@ export class RecipeDetailComponent implements OnInit {
     );
   }
 
-  onDeleteRecipe(){
-    this.recipeService.deleteRecipe(this.id).subscribe(
-      response => {
-        this.router.navigate(['../../'], {relativeTo: this.activatedRoute});
-      }
-    );
-  }
-
   errorHandling(error){
     this.error = error;
     console.log("Error:", error);
   }
 
-  onToggleConfirmation(){
-    this.isConfirmationOpen = !this.isConfirmationOpen;;
+  onToggleDeleteModal(){
+    this.isDeleteModalOpen = !this.isDeleteModalOpen;    
+  }
+
+  onDeleteModalClick(buttonIndex: number){
+    switch(buttonIndex){
+      case 0:
+        this.onToggleDeleteModal();
+        break;
+      //Confirms that the recipe should be deleted:
+      case 1:
+        this.recipeService.deleteRecipe(this.id).subscribe(
+          response => {
+            this.router.navigate(['../../'], {relativeTo: this.activatedRoute});
+          }
+        );
+        break;
+    }
   }
   
 }

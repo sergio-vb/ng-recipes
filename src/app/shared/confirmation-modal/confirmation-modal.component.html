@@ -1,4 +1,5 @@
-<div class="required-action-modal" [ngClass]="{active: isVisible}">
+<div class="confirmation-modal" [ngClass]="{active: isVisible}">
+  <i *ngIf="!config.actionRequired" class="close circle small material-icons" (click)="onClose()">cancel</i>
   <div class="card-panel">
     <p>{{config.mainText}}</p>
     <a *ngFor="let button of config.buttons; let i = index"

@@ -2,7 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs/Subscription';
 
-import { OptionalActionModalConfig } from '../../shared/optional-action-modal-config.model';
+import { ConfirmationModalConfig } from '../../shared/confirmation-modal-config.model';
 import { Recipe } from '../recipe.model';
 
 import { AuthService } from '../../auth/auth.service';
@@ -17,8 +17,8 @@ import { RecipeService } from '../recipe.service';
 export class RecipeListComponent implements OnInit, OnDestroy {
   recipes: Recipe[];
   recipeSubscription: Subscription;
-  modalConfig: OptionalActionModalConfig;
-  isModalOpen: boolean;
+  newRecipeModalConfig: ConfirmationModalConfig;
+  isNewRecipeModalOpen: boolean;
 
 
   constructor(
@@ -30,13 +30,20 @@ export class RecipeListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
-    this.isModalOpen = false;
-    this.modalConfig = {
+    this.isNewRecipeModalOpen = false;
+    this.newRecipeModalConfig = {
       mainText: "You need to log in or register to create a new recipe.",
-      leftButtonText: "Register",
-      rightButtonText: "Log In",
-      leftButtonStyles: "btn",
-      rightButtonStyles: "btn"
+      actionRequired: false,
+      buttons: [
+        {
+          text: "Register",
+          styles: "btn"
+        },
+        {
+          text: "Log In",
+          styles: "btn"
+        }
+      ]
     }
 
     this.getRecipes();
@@ -72,20 +79,24 @@ export class RecipeListComponent implements OnInit, OnDestroy {
           this.router.navigate(['./new'], {relativeTo: this.activatedRoute});
         //User not logged in, show modal
         }else{
-          this.isModalOpen = true;
+          this.isNewRecipeModalOpen = true;
         }
       },
       error => {
-        this.isModalOpen = true;
+        this.isNewRecipeModalOpen = true;
       }
     );
   }
 
-  onModalRegister(){
-    this.router.navigate(['/signup']);
-  }
-  onModalLogin(){
-    this.router.navigate(['/signin']);    
+  onNewRecipeModalClick(buttonIndex: number){
+    switch (buttonIndex){
+      case 0:
+        this.router.navigate(['/signup']);
+        break;
+      case 1:
+        this.router.navigate(['/signin']);    
+        break;
+    }
   }
 
 }

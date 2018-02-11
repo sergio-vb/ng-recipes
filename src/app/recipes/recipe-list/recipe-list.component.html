@@ -10,9 +10,8 @@
     ></a>
 </div>
 
-<app-optional-action-modal
-    [config]="modalConfig"
-    [(isVisible)]="isModalOpen"
-    (leftButtonClick)="onModalRegister()"
-    (rightButtonClick)="onModalLogin()"
-></app-optional-action-modal>
+<app-confirmation-modal
+    [config]="newRecipeModalConfig"
+    [(isVisible)]="isNewRecipeModalOpen"
+    (buttonClick)="onNewRecipeModalClick($event)"
+></app-confirmation-modal>

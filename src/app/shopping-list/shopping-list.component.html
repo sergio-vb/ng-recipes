@@ -32,21 +32,20 @@
   </div>
 </section>
 
-<app-optional-action-modal
+<app-confirmation-modal
   [config]="saveListModalConfig"
   [(isVisible)]="isSaveListModalOpen"
-  (leftButtonClick)="onModalRegister()"
-  (rightButtonClick)="onModalLogin()"
-></app-optional-action-modal>
+  (buttonClick)="onSaveListModalClick($event)"
+></app-confirmation-modal>
 
-<app-required-action-modal
+<app-confirmation-modal
   [config]="listConflictModalConfig"
-  [isVisible]="isListConflictModalOpen"
+  [(isVisible)]="isListConflictModalOpen"
   (buttonClick)="onListConflictModalClick($event)"
-></app-required-action-modal>
+></app-confirmation-modal>
 
-<app-required-action-modal
+<app-confirmation-modal
   [config]="canDeactivateModalConfig"
-  [isVisible]="isCanDeactivateModalOpen"
+  [(isVisible)]="isCanDeactivateModalOpen"
   (buttonClick)="onCanDeactivateModalClick($event)"
-></app-required-action-modal>
+></app-confirmation-modal>
