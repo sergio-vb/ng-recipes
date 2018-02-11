@@ -27,8 +27,13 @@
     margin-top: 0.7em;
 }
 .main-actions{
+
+    float: right;
+    
     button{
-        float: right;
         margin-left: 0.3em;
     }
+}
+.input-field{
+    margin-bottom: 2em;
 }
