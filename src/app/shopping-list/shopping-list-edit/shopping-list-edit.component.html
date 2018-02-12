@@ -10,6 +10,14 @@
             id="name" 
             type="text" 
           >
+          <div class="form-errors"
+            *ngIf="ingredientForm.get('ingredientName').invalid && 
+            (ingredientForm.get('ingredientName').dirty || ingredientForm.get('ingredientName').touched)"
+          >
+            <div *ngIf="ingredientForm.get('ingredientName').errors.required">
+                Name is required.
+            </div>
+          </div>
         </div>
         <div class="col s1 input-field ingredient-amount">
           <label for="amount" [ngClass]="{active: editMode}">Amount</label>
@@ -20,6 +28,17 @@
             min="0"
             type="number" 
           >
+          <div class="form-errors"
+            *ngIf="ingredientForm.get('ingredientAmount').invalid && 
+            (ingredientForm.get('ingredientAmount').dirty || ingredientForm.get('ingredientAmount').touched)"
+          >
+            <div *ngIf="ingredientForm.get('ingredientAmount').errors.required">
+                Amount is required.
+            </div>
+            <div *ngIf="ingredientForm.get('ingredientAmount').errors.pattern">
+                Amount should be a positive number.
+            </div>
+          </div>
         </div>
       </div>
       <div class="row">
