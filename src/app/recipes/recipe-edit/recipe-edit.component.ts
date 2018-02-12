@@ -45,15 +45,30 @@ export class RecipeEditComponent implements OnInit {
   }
 
   validateDuplicates(formControl: FormControl){
-    let duplicates = this.recipeForm.value.ingredients.filter(
-      ingredient => (ingredient.name === formControl.value)
+    const controlIndex = this.findIndexOfFormControl(formControl);
+    
+    //Finds any ingredients with a name that matches the value of the formControl being validated, but excluding itself
+    const duplicates = this.recipeForm.value.ingredients.filter(
+      (ingredient, i) => (ingredient.name === formControl.value) && (i !== controlIndex)
     );
     //Returns the error object if any duplicate is found, otherwise return null to indicate that field is valid:
-    return (duplicates.length > 1) ? {
+    return (duplicates.length > 0) ? {
       validateDuplicates: {
         valid: false
       }
     } : null;
+  }
+
+  //Finds the index of a formControl inside the ingredients FormArray
+  findIndexOfFormControl(formControl: FormControl){
+    const ingredientControls = (<FormArray>this.recipeForm.get('ingredients')).controls;
+    let index = -1;
+    ingredientControls.map( (ingredient: FormGroup, i) => {
+      if (ingredient.controls.name === formControl){
+        index = i;
+      }
+    });
+    return index;
   }
 
   private initForm(){
