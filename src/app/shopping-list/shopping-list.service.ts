@@ -3,6 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
 import { Subscription } from 'rxjs/Subscription';
+import _ from 'lodash';
 
 import { Ingredient } from '../shared/ingredient.model';
 import { AuthService } from '../auth/auth.service';
@@ -24,7 +25,9 @@ export class ShoppingListService implements OnDestroy{
   }
 
   init(){
+    this.temporaryCachedShoppingList = {};
     this.isRemoteListLoaded = false;
+
     this.authStateSubscription = this.authService.getAuthState().subscribe(
       ({userId}) => {
         if (!userId){ //When user logs out
@@ -45,12 +48,12 @@ export class ShoppingListService implements OnDestroy{
   }
 
   getLocalIngredient(key: string) {
-    return Object.assign({}, this.temporaryCachedShoppingList[key]); //Returns a copy, to avoid giving a direct reference to the object
+    return _.cloneDeep(this.temporaryCachedShoppingList[key]); //Returns a copy, to avoid giving a direct reference to the object
   }
 
   //Use getShoppingList() as the public API
   private getLocalIngredients() {
-    return Object.assign({}, this.temporaryCachedShoppingList); //Returns a copy, to avoid giving a direct reference to the object (keep in mind it's just a shallow copy)
+    return _.cloneDeep(this.temporaryCachedShoppingList); //Returns a copy, to avoid giving a direct reference to the object
   }
 
   addLocalIngredient(ingredient: Ingredient) {
@@ -120,14 +123,9 @@ export class ShoppingListService implements OnDestroy{
         //If user is logged in
         if (userId){
 
-          //If there's a non-empty cached version, and there are no unsaved changes, return the cached version
-          // if (this.temporaryCachedShoppingList && Object.keys(this.temporaryCachedShoppingList).length > 0 && !this.hasUnsavedChanges){
-          //   return Observable.of(this.temporaryCachedShoppingList);
-          // }
-
           //No need to fetch the user's list from the database if it's currently present in the cache
           if (this.isRemoteListLoaded){
-            return Observable.of(this.temporaryCachedShoppingList);
+            return Observable.of(_.cloneDeep(this.temporaryCachedShoppingList));
           }
 
           //Gets the shopping list of the user
@@ -144,7 +142,7 @@ export class ShoppingListService implements OnDestroy{
               }else{
                 this.temporaryCachedShoppingList = (userIngredientsLength > 0) ? userIngredients : (this.temporaryCachedShoppingList || {});
                 this.isRemoteListLoaded = true;
-                return this.temporaryCachedShoppingList;
+                return _.cloneDeep(this.temporaryCachedShoppingList);
               }
             });
 
@@ -155,7 +153,7 @@ export class ShoppingListService implements OnDestroy{
           if (!this.temporaryCachedShoppingList){
             this.temporaryCachedShoppingList = {};
           }
-          return Observable.of(this.temporaryCachedShoppingList);
+          return Observable.of(_.cloneDeep(this.temporaryCachedShoppingList));
         }
       }
     );
@@ -178,10 +176,9 @@ export class ShoppingListService implements OnDestroy{
     );
   }
 
-  //Merges two shopping lists and returns the merged list (shallow copy)
+  //Merges two shopping lists and returns the merged list (Pure function, uses deep cloning)
   mergeLists(list1: any, list2: any){
-    let mergedList = {};
-    Object.assign(mergedList, list1);
+    let mergedList = _.cloneDeep(list1);
     Object.keys(list2).map( key => {
       
       //If an ingredient already exists in the merged list, add their amounts together
@@ -190,7 +187,7 @@ export class ShoppingListService implements OnDestroy{
       
       //Otherwise, just add the ingredient to the merged list
       }else{
-        mergedList[key] = list2[key];
+        mergedList[key] = _.cloneDeep(list2[key]);
       }
     });
     return mergedList;

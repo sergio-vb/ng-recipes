@@ -1,5 +1,6 @@
 import { Component, OnInit} from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
+import _ from 'lodash';
 
 import { Ingredient } from '../../shared/ingredient.model';
 import { ConfirmationModalConfig } from '../../shared/confirmation-modal-config.model';
@@ -84,7 +85,7 @@ export class RecipeDetailComponent implements OnInit {
 
   onAddToShoppingList() {
     console.log("Ingredients from Recipe: \n", this.ingredients);
-    this.shoppingListService.addIngredientsFromRecipe(this.ingredients).subscribe(
+    this.shoppingListService.addIngredientsFromRecipe(_.cloneDeep(this.ingredients)).subscribe(
       response => {
         console.log("Ingredients added to shopping list successfully");
       }
