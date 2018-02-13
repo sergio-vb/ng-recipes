@@ -41,6 +41,8 @@ The specificity is needed to overwrite Materialize default styles*/
 
 input[type=text]:not(.browser-default),
 input[type=number]:not(.browser-default),
+input[type=email]:not(.browser-default),
+input[type=password]:not(.browser-default),
 textarea.materialize-textarea{
     &.ng-touched.ng-valid{
         border-bottom: 1px solid #4CAF50;
