@@ -22,3 +22,23 @@ h1{
         text-decoration: underline;
     }
 }
+.password-group{
+
+    margin-bottom: 3em;
+
+    .row:nth-child(2){
+
+        margin-bottom: 0;
+        
+        .input-field{
+            margin-bottom: 0;
+        }
+    }
+    
+    &.ng-invalid.confirmation-touched{ //We want to display the red border on both fields only after the second one has been touched
+        input[type=password]:not(.browser-default){
+            border-bottom: 1px solid #ff0000;
+            box-shadow: 0 1px 0 0 #ff0000;
+        }
+    }
+}

@@ -3,12 +3,13 @@
       <section class="sign-in card-panel">
           <i class="icon material-icons medium">account_circle</i>
           <h1>Create a New Account</h1>
+
           <form (ngSubmit)="onSignup(form)" #form="ngForm">
             <div class="row">
               <div class="input-field">
                 <input 
                   #email="ngModel"
-                  class="form-control validate" 
+                  class="form-control" 
                   email
                   id="email" 
                   name="email" 
@@ -17,6 +18,7 @@
                   type="email" 
                 >
                 <label for="email">Email</label>
+                
                 <div class="form-errors"
                   *ngIf="email.invalid && email.touched"
                 >
@@ -29,41 +31,49 @@
                 </div>
               </div>
             </div>
-            <div class="row">
-              <div class="input-field">
-                <input 
-                  #password="ngModel"
-                  class="form-control validate" 
-                  id="password" 
-                  minlength="6"
-                  name="password" 
-                  ngModel
-                  required
-                  type="password" 
-                >
-                <label for="password">Password</label>
-                <div class="form-errors"
-                  *ngIf="password.invalid && password.touched"
-                >
-                  <div *ngIf="password.errors.required">
-                    Password is required.
-                  </div>
-                  <div *ngIf="password.errors.minlength">
-                    Password should be 6 characters long or more.
+
+            <div 
+              #passwordGroup="ngModelGroup"
+              [ngClass]="{'confirmation-touched': passwordConfirmation.touched }"
+              appPasswordConfirmation
+              class="password-group"
+              ngModelGroup="passwordGroup"
+            >
+              <div class="row">
+                <div class="input-field">
+                  <input 
+                    #password="ngModel"
+                    class="form-control" 
+                    id="password" 
+                    minlength="6"
+                    name="password" 
+                    ngModel
+                    required
+                    type="password" 
+                  >
+                  <label for="password">Password</label>
+
+                  <div class="form-errors"
+                    *ngIf="password.invalid && password.touched"
+                  >
+                    <div *ngIf="password.errors.required">
+                      Password is required.
+                    </div>
+                    <div *ngIf="password.errors.minlength">
+                      Password should be 6 characters long or more.
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="row">
+              <div class="row">
                 <div class="input-field">
                   <input 
                     #passwordConfirmation="ngModel"
-                    class="form-control validate" 
+                    class="form-control" 
                     id="password-confirmation" 
                     name="password-confirmation" 
                     ngModel
                     required
-                    appPasswordConfirmation="password"
                     type="password" 
                   >
                   <label for="password-confirmation">Password Confirmation</label>
@@ -74,13 +84,20 @@
                     <div *ngIf="passwordConfirmation.errors.required">
                       Password confirmation is required.
                     </div>
-                    <div *ngIf="passwordConfirmation.errors.passwordConfirmation && !passwordConfirmation.errors.required">
-                      Password confirmation doesn't match.
-                    </div>
                   </div>
 
                 </div>
               </div>
+
+              <div class="form-errors"
+                *ngIf="passwordGroup.invalid && passwordConfirmation.touched && !passwordConfirmation.errors?.required"
+              >
+                <div *ngIf="passwordGroup.errors?.passwordConfirmation">
+                  Password confirmation doesn't match.
+                </div>
+              </div>
+
+            </div>
           
             <button class="btn waves-effect waves-light" type="submit" name="action" [disabled]="!form.valid">
               Register<i class="material-icons right">send</i>

@@ -39,11 +39,18 @@ The specificity is needed to overwrite Materialize default styles*/
     }   
 }
 
+//Overwriting Materialize styles
+.input-field{
+    margin-bottom: 20px;
+}
 input[type=text]:not(.browser-default),
 input[type=number]:not(.browser-default),
 input[type=email]:not(.browser-default),
 input[type=password]:not(.browser-default),
 textarea.materialize-textarea{
+
+    margin-bottom: 0;
+
     &.ng-touched.ng-valid{
         border-bottom: 1px solid #4CAF50;
         box-shadow: 0 1px 0 0 #4CAF50;
@@ -55,6 +62,6 @@ textarea.materialize-textarea{
 }
 .form-errors{
     color: #ff0000;
-    margin-top: -14px;
+    margin-top: 0.3em;
     font-size: 0.95em;
 }
