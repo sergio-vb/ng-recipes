@@ -64,4 +64,8 @@ textarea.materialize-textarea{
     color: #ff0000;
     margin-top: 0.3em;
     font-size: 0.95em;
+
+    &.standalone{
+        margin: 1em 0 2em;
+    }
 }

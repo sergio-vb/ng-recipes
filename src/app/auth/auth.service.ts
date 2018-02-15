@@ -40,19 +40,16 @@ export class AuthService {
         return this.authState;
     }
 
-    async signupUser(email: string, password: string){
-        await firebase.auth().createUserWithEmailAndPassword(email, password);
-        this.router.navigate(['/']);
+    signupUser(email: string, password: string){
+        return firebase.auth().createUserWithEmailAndPassword(email, password);
     }
     
-    async loginUser(email: string, password: string){
-        await firebase.auth().signInWithEmailAndPassword(email, password);
-        this.router.navigate(['/']);
+    loginUser(email: string, password: string){
+        return firebase.auth().signInWithEmailAndPassword(email, password);
     }
 
-    async logoutUser(){
-        await firebase.auth().signOut();
-        this.router.navigate(['/']);
+    logoutUser(){
+        return firebase.auth().signOut();
     }
     
 }

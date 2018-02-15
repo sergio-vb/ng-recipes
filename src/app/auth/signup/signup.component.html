@@ -98,6 +98,8 @@
               </div>
 
             </div>
+
+            <div class="form-errors standalone" *ngIf="error">{{error}}</div>
           
             <button class="btn waves-effect waves-light" type="submit" name="action" [disabled]="!form.valid">
               Register<i class="material-icons right">send</i>
