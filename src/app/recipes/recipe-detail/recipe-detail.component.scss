@@ -7,9 +7,11 @@
     overflow: hidden;
 
     img{
-        width: 100%;
         min-height: 100%;
-        transform: translateY(-25%);
+        position: relative;
+        top: 50%;
+        transform: translateY(-50%); //This combination of top and transformY centers the image vertically
+        width: 100%;
     }
 }
 .card-title{
