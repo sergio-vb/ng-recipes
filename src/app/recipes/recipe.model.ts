@@ -6,6 +6,7 @@ export class Recipe {
     public name: string,
     public slug: string,
     public description: string,
+    public preparation: string,
     public imagePath: string
   ) {}
 }

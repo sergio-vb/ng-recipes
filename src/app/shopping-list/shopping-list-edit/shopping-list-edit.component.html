@@ -2,23 +2,6 @@
   <div class="col s12">
     <form [formGroup]="ingredientForm" (ngSubmit)="onAddItem()">
       <div class="row">
-        <div class="col s5 input-field ingredient-name">
-          <label for="name" [ngClass]="{active: editMode}">Name</label>
-          <input 
-            class="form-control validate"
-            formControlName="ingredientName"
-            id="name" 
-            type="text" 
-          >
-          <div class="form-errors"
-            *ngIf="ingredientForm.get('ingredientName').invalid && 
-            (ingredientForm.get('ingredientName').dirty || ingredientForm.get('ingredientName').touched)"
-          >
-            <div *ngIf="ingredientForm.get('ingredientName').errors.required">
-                Name is required.
-            </div>
-          </div>
-        </div>
         <div class="col s1 input-field ingredient-amount">
           <label for="amount" [ngClass]="{active: editMode}">Amount</label>
           <input 
@@ -40,6 +23,25 @@
             </div>
           </div>
         </div>
+        
+        <div class="col s5 input-field ingredient-name">
+          <label for="name" [ngClass]="{active: editMode}">Name</label>
+          <input 
+            class="form-control validate"
+            formControlName="ingredientName"
+            id="name" 
+            type="text" 
+          >
+          <div class="form-errors"
+            *ngIf="ingredientForm.get('ingredientName').invalid && 
+            (ingredientForm.get('ingredientName').dirty || ingredientForm.get('ingredientName').touched)"
+          >
+            <div *ngIf="ingredientForm.get('ingredientName').errors.required">
+                Name is required.
+            </div>
+          </div>
+        </div>
+        
       </div>
       <div class="row">
         <div class="col s12">

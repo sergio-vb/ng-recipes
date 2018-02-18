@@ -28,6 +28,22 @@
         <div class="row">
             <div class="col s12">
                 <div class="input-field">
+                    <label for="description" [ngClass]="{'active': editMode }">Recipe Description: Enter a short description for your recipe.</label>
+                    <input type="text" id="description" class="form-control brow" formControlName="description">
+                    <div class="form-errors"
+                        *ngIf="recipeForm.get('description').invalid && 
+                        (recipeForm.get('description').dirty || recipeForm.get('description').touched)"
+                    >
+                        <div *ngIf="recipeForm.get('description').errors.required">
+                            Recipe description is required.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col s12">
+                <div class="input-field">
                     <label for="imagePath" [ngClass]="{'active': editMode }">Image URL</label>
                     <input type="text" id="imagePath" class="form-control" formControlName="imagePath" #imagePath>
                     <div class="form-errors"
@@ -118,26 +134,23 @@
             </div>
         </div>
         
-        <h6 class="subtitle">Description and Preparation:</h6>
+        <h6 class="subtitle">Preparation:</h6>
         <div class="row">
             <div class="col s12">
                 <div class="input-field">
-                    <!-- <label for="description" [ngClass]="{'active': editMode }">Description and Preparation</label> -->
-                    <!-- <textarea type="text" id="description" class="form-control materialize-textarea" rows="6"  formControlName="description"></textarea> -->
-                    <!-- <quill-editor (onEditorCreated)="onQuillEditorCreated($event)" (onContentChanged)="onQuillContentChanged($event)"></quill-editor> -->
                     
                     <quill-editor 
                         #editor 
-                        [formControl]="recipeForm.controls['description']"
+                        [formControl]="recipeForm.controls['preparation']"
                         [style]="{minHeight: '200px'}"
                     ></quill-editor>
 
                     <div class="form-errors"
-                        *ngIf="recipeForm.get('description').invalid && 
-                        (recipeForm.get('description').dirty || recipeForm.get('description').touched)"
+                        *ngIf="recipeForm.get('preparation').invalid && 
+                        (recipeForm.get('preparation').dirty || recipeForm.get('preparation').touched)"
                     >
-                        <div *ngIf="recipeForm.get('description').errors.required">
-                            Description is required.
+                        <div *ngIf="recipeForm.get('preparation').errors.required">
+                            Preparation information is required.
                         </div>
                     </div>
                 </div>

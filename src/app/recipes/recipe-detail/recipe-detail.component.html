@@ -15,14 +15,16 @@
           <li *ngIf="userOwnsRecipe"><a class="clickable" (click)="onToggleDeleteModal()">Delete Recipe</a></li>
         </ul>
       </div>
+
+      <p class="description">{{recipe.description}}</p>
       
       <h6 class="subtitle">Ingredients:</h6>
       <ul class="browser-default">
         <li class="ingredients-item" *ngFor="let key of ingredients | objectKeys">{{ ingredients[key].amount }} {{ ingredients[key].name }}</li>
       </ul>
 
-      <h6 class="subtitle">Description and Preparation:</h6>
-      <div class="recipe-description" [innerHTML]="recipe.description"></div>
+      <h6 class="subtitle">Preparation:</h6>
+      <div class="recipe-description" [innerHTML]="recipe.preparation"></div>
       
     </div>
   </ng-container>

@@ -14,15 +14,15 @@ import { AuthService } from '../../auth/auth.service';
   styleUrls: ['./recipe-edit.component.scss']
 })
 export class RecipeEditComponent implements OnInit {
-  id: string;
   editMode = false;
+  id: string;
   recipeForm: FormGroup;
 
   constructor(
-    private router: Router,
     private activatedRoute: ActivatedRoute,
+    private authService: AuthService,
     private recipeService: RecipeService,
-    private authService: AuthService
+    private router: Router
   ) {}
 
   ngOnInit() {
@@ -41,7 +41,6 @@ export class RecipeEditComponent implements OnInit {
       'name': new FormControl(null, [Validators.required, this.validateDuplicates.bind(this)]),
       'amount': new FormControl(null, [Validators.required, Validators.pattern(/^[1-9]+[0-9]*[\.]*[0-9]*$/)])
     }));
-    console.log("Form:", this.recipeForm.controls.ingredients);
   }
 
   validateDuplicates(formControl: FormControl){
@@ -77,12 +76,14 @@ export class RecipeEditComponent implements OnInit {
     let recipeName = '';
     let recipeImagePath = '';
     let recipeDescription = '';
+    let recipePreparation = '';
     let recipeIngredients = new FormArray([]);
 
     this.recipeForm = new FormGroup({
       'name': new FormControl(recipeName, Validators.required),
       'imagePath': new FormControl(recipeImagePath, Validators.required),
       'description': new FormControl(recipeDescription, Validators.required),
+      'preparation': new FormControl(recipePreparation, Validators.required),
       'ingredients': recipeIngredients
     });
 
@@ -94,6 +95,7 @@ export class RecipeEditComponent implements OnInit {
           this.recipeForm.controls['name'].setValue(recipe.name);
           this.recipeForm.controls['imagePath'].setValue(recipe.imagePath);
           this.recipeForm.controls['description'].setValue(recipe.description);
+          this.recipeForm.controls['preparation'].setValue(recipe.preparation);
         }
       );
       this.recipeService.getRecipeIngredients(this.id).subscribe(
@@ -119,6 +121,7 @@ export class RecipeEditComponent implements OnInit {
       formValues.name, 
       this.recipeService.slugify(formValues.name),
       formValues.description, 
+      formValues.preparation,
       formValues.imagePath
     );
 
@@ -152,11 +155,5 @@ export class RecipeEditComponent implements OnInit {
   onDeleteIngredient(index:number){
     (<FormArray>this.recipeForm.get('ingredients')).removeAt(index);
   }
-
-  onQuillEditorCreated(x: any){
-    console.log("Editor created, received:", x);
-  }
-  onQuillContentChanged(x: any){
-    console.log("Content changed:", x.html);
-  }
+  
 }
