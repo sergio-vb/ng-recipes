@@ -16,11 +16,14 @@
         </ul>
       </div>
       
-      <div class="recipe-description" [innerHTML]="recipe.description"></div>
-      <h5>Ingredients:</h5>
-      <ul class="collection">
-        <li class="collection-item" *ngFor="let key of ingredients | objectKeys">{{ ingredients[key].name }} - {{ ingredients[key].amount }}</li>
+      <h6 class="subtitle">Ingredients:</h6>
+      <ul class="browser-default">
+        <li class="ingredients-item" *ngFor="let key of ingredients | objectKeys">{{ ingredients[key].amount }} {{ ingredients[key].name }}</li>
       </ul>
+
+      <h6 class="subtitle">Description and Preparation:</h6>
+      <div class="recipe-description" [innerHTML]="recipe.description"></div>
+      
     </div>
   </ng-container>
 </div>

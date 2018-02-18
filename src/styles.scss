@@ -15,7 +15,7 @@ html {
 The specificity is needed to overwrite Materialize default styles*/
 .card .card-content .recipe-description{ 
     p{
-        margin: 1em 0;
+        margin: 0;
     }
 }
 

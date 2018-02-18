@@ -44,59 +44,23 @@
         
         <div class="row">
             <div class="col s12">
-                <img [src]="imagePath.value" class="responsive-img">
+                <img [src]="imagePath.value" class="responsive-img recipe-image">
             </div>
         </div>
-        
-        <div class="row">
-            <div class="col s12">
-                <div class="input-field">
-                    <label for="description" [ngClass]="{'active': editMode }">Description and Preparation</label>
-                    <textarea type="text" id="description" class="form-control materialize-textarea" rows="6"  formControlName="description"></textarea>
-                    <div class="form-errors"
-                        *ngIf="recipeForm.get('description').invalid && 
-                        (recipeForm.get('description').dirty || recipeForm.get('description').touched)"
-                    >
-                        <div *ngIf="recipeForm.get('description').errors.required">
-                            Description is required.
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <h6 class="subtitle">Ingredients:</h6>
 
+        <h6 class="subtitle">Ingredients:</h6>
         <div class="row">
             <div class="col s12" formArrayName="ingredients">
                 <div class="ingredients-wrapper">
                     <div class="row ingredients-header">
-                        <div class="col s9">Ingredient name</div>
                         <div class="col s2">Amount</div>
+                        <div class="col s9">Ingredient name</div>
                     </div>
                     <div 
                         class="row ingredient-row" 
                         *ngFor="let ingredientCrl of recipeForm.get('ingredients').controls; let i = index"
                         [formGroupName]="i"
                     >
-                        <div class="col s9">
-                            <input 
-                                type="text" 
-                                class="form-control" 
-                                formControlName="name">
-
-                            <div class="form-errors"
-                                *ngIf="ingredientCrl.get('name').invalid && 
-                                (ingredientCrl.get('name').dirty || ingredientCrl.get('name').touched)"
-                                >
-                                <div *ngIf="ingredientCrl.get('name').errors.required">
-                                    Name is required.
-                                </div>
-                                <div *ngIf="ingredientCrl.get('name').errors.validateDuplicates">
-                                    This ingredient name already exists in this recipe.
-                                </div>
-                            </div>
-                        </div>
                         <div class="col s2">
                             <input 
                                 type="number" 
@@ -116,6 +80,24 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="col s9">
+                            <input 
+                                type="text" 
+                                class="form-control" 
+                                formControlName="name">
+
+                            <div class="form-errors"
+                                *ngIf="ingredientCrl.get('name').invalid && 
+                                (ingredientCrl.get('name').dirty || ingredientCrl.get('name').touched)"
+                                >
+                                <div *ngIf="ingredientCrl.get('name').errors.required">
+                                    Name is required.
+                                </div>
+                                <div *ngIf="ingredientCrl.get('name').errors.validateDuplicates">
+                                    This ingredient name already exists in this recipe.
+                                </div>
+                            </div>
+                        </div>
                         <div class="col s1">
                             <div class="cancel clickable" (click)="onDeleteIngredient(i)">
                                 <i class="material-icons">cancel</i></div>
@@ -132,6 +114,32 @@
                         </div>
                     </div>
 
+                </div>
+            </div>
+        </div>
+        
+        <h6 class="subtitle">Description and Preparation:</h6>
+        <div class="row">
+            <div class="col s12">
+                <div class="input-field">
+                    <!-- <label for="description" [ngClass]="{'active': editMode }">Description and Preparation</label> -->
+                    <!-- <textarea type="text" id="description" class="form-control materialize-textarea" rows="6"  formControlName="description"></textarea> -->
+                    <!-- <quill-editor (onEditorCreated)="onQuillEditorCreated($event)" (onContentChanged)="onQuillContentChanged($event)"></quill-editor> -->
+                    
+                    <quill-editor 
+                        #editor 
+                        [formControl]="recipeForm.controls['description']"
+                        [style]="{minHeight: '200px'}"
+                    ></quill-editor>
+
+                    <div class="form-errors"
+                        *ngIf="recipeForm.get('description').invalid && 
+                        (recipeForm.get('description').dirty || recipeForm.get('description').touched)"
+                    >
+                        <div *ngIf="recipeForm.get('description').errors.required">
+                            Description is required.
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

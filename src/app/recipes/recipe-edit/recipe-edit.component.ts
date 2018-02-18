@@ -152,4 +152,11 @@ export class RecipeEditComponent implements OnInit {
   onDeleteIngredient(index:number){
     (<FormArray>this.recipeForm.get('ingredients')).removeAt(index);
   }
+
+  onQuillEditorCreated(x: any){
+    console.log("Editor created, received:", x);
+  }
+  onQuillContentChanged(x: any){
+    console.log("Content changed:", x.html);
+  }
 }
