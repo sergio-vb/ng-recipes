@@ -13,9 +13,19 @@ html {
 
 /* Styles for the recipes descriptions, which are injected as innerHTML to preserve user formatting.
 The specificity is needed to overwrite Materialize default styles*/
-.card .card-content .recipe-description{ 
+.card .card-content .inserted-html{ 
     p{
         margin: 0;
+    }
+    li{
+        margin: 0.2em 0;
+        line-height: 1.6em;
+    }
+    strong{
+        font-weight: bold;
+    }
+    img{
+        max-width: 100%;
     }
 }
 
