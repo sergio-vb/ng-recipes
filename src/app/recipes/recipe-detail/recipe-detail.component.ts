@@ -23,8 +23,7 @@ export class RecipeDetailComponent implements OnInit {
   userOwnsRecipe: boolean;
   isDeleteModalOpen: boolean;
   deleteModalConfig: ConfirmationModalConfig;
-  public loadingDetails: boolean;
-  public loadingIngredients: boolean;
+  public loading: boolean;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -35,8 +34,7 @@ export class RecipeDetailComponent implements OnInit {
 
   ngOnInit() {
 
-    this.loadingDetails = true;
-    this.loadingIngredients = true;
+    this.loading = true;
 
     this.isDeleteModalOpen = false;
     this.deleteModalConfig = {
@@ -58,27 +56,23 @@ export class RecipeDetailComponent implements OnInit {
       async (params:Params) => {
         this.id = params.id;
         this.error = "";
+        this.loading = true;
 
         try{
-          this.recipe = <Recipe> await this.recipeService.getRecipe(this.id).first().toPromise();
+          this.recipe = <Recipe> await this.recipeService.getRecipe(this.id).toPromise();
           
           //If recipe doesn't exist, redirect to recipes home
           if (this.recipe === null){
             this.router.navigate(["/recipes"]);
           }else{
-            this.loadingDetails = false;
-
+            
             //Gets recipe ingredients
             const ingredientsResponse = await this.recipeService.getRecipeIngredients(this.id).toPromise();
-            // this.ingredients = [];
-            // for (let id in ingredientsResponse){
-            //   this.ingredients.push(ingredientsResponse[id]);
-            // }
             this.ingredients = ingredientsResponse;
-            this.loadingIngredients = false;
+            this.loading = false;
 
             //Sets option to enable Edit and Delete if user is owner
-            this.userOwnsRecipe = await this.recipeService.doesRecipeBelongToUser(this.id, this.recipe).toPromise(); //Only interested in first value, not on-going subscription
+            this.userOwnsRecipe = await this.recipeService.doesRecipeBelongToUser(this.id, this.recipe).toPromise();
           }
 
         }catch(error){
@@ -91,7 +85,6 @@ export class RecipeDetailComponent implements OnInit {
   }
 
   onAddToShoppingList() {
-    console.log("Ingredients from Recipe: \n", this.ingredients);
     this.shoppingListService.addIngredientsFromRecipe(_.cloneDeep(this.ingredients)).subscribe(
       response => {
         console.log("Ingredients added to shopping list successfully");

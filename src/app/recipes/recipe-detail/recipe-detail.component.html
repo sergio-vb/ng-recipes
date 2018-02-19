@@ -1,6 +1,6 @@
 <div class="card">
-  <app-loader text="Loading recipe..." *ngIf="(loadingDetails || loadingIngredients) && !error"></app-loader>
-  <ng-container *ngIf="!loadingDetails && !loadingIngredients && !error">
+  <app-loader text="Loading recipe..." *ngIf="loading && !error"></app-loader>
+  <ng-container *ngIf="!loading && !error">
     <div class="card-image">
       <img [src]="recipe.imagePath">
       <span class="card-title">{{recipe.name}}</span>
