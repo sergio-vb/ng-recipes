@@ -1,13 +1,13 @@
 <div class="card-panel">
 
-    <div *ngIf="editMode; else newRecipeMessage">
-        <h5 class="title">Edit your recipe:</h5>
-    </div>
-    <ng-template #newRecipeMessage>
-        <h5 class="title">Enter your new recipe:</h5>
-    </ng-template>
+    <h5 class="title">{{editMode ? 'Edit your recipe' : 'Enter your new recipe'}}:</h5>
 
-    <form [formGroup]="recipeForm" (ngSubmit)="onSubmit()">
+    <app-loader text="Loading your recipe..." *ngIf="editMode && (loadingDetails || loadingIngredients)"></app-loader>
+
+    <form 
+        [formGroup]="recipeForm" 
+        (ngSubmit)="onSubmit()" 
+        *ngIf="!editMode || (!loadingDetails && !loadingIngredients)">
 
         <div class="row">
             <div class="col s12">
@@ -57,6 +57,11 @@
                 </div>
             </div>
         </div>
+        <!-- <div class="row">
+            <div class="col s12">
+                <input type="file" #fileInput placeholder="Upload file..." formControlName="imagePath">
+            </div>
+        </div> -->
         
         <div class="row">
             <div class="col s12">

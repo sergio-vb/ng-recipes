@@ -17,6 +17,8 @@ export class RecipeEditComponent implements OnInit {
   editMode = false;
   id: string;
   recipeForm: FormGroup;
+  public loadingDetails: boolean;
+  public loadingIngredients: boolean;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -31,6 +33,8 @@ export class RecipeEditComponent implements OnInit {
         (params: Params) => {
           this.id = params.id;
           this.editMode = params.id !== undefined;
+          this.loadingDetails = true;
+          this.loadingIngredients = true;
           this.initForm();
         }
       );
@@ -96,6 +100,7 @@ export class RecipeEditComponent implements OnInit {
           this.recipeForm.controls['imagePath'].setValue(recipe.imagePath);
           this.recipeForm.controls['description'].setValue(recipe.description);
           this.recipeForm.controls['preparation'].setValue(recipe.preparation);
+          this.loadingDetails = false;
         }
       );
       this.recipeService.getRecipeIngredients(this.id).subscribe(
@@ -106,6 +111,7 @@ export class RecipeEditComponent implements OnInit {
               'amount': new FormControl(ingredients[id].amount, [Validators.required, Validators.pattern(/^[1-9]+[0-9]*[\.]*[0-9]*$/)]),
             }));
           }
+          this.loadingIngredients = false;
         }
       );
     }
