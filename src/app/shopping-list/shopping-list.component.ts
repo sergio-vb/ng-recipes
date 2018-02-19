@@ -21,6 +21,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   public ingredients: any;
   public itemSelected: string;
   public unsavedChangesStatus: boolean;
+  public loading: boolean;
   
   //Modals
   public isSaveListModalOpen: boolean;
@@ -39,14 +40,13 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
 
   ngOnInit() {
 
+    this.loading = true;
     this.initializeModals();
     this.initializeData();
 
     this.subscription = this.shoppingListService.shoppingListChange.subscribe(
       (ingredients) => {
-        console.log("Shopping list received ingredients updated:", ingredients);
         this.unsavedChangesStatus = this.shoppingListService.getHasUnsavedChanges();
-        console.log("UnsavedChangesStatus:", this.unsavedChangesStatus);
         this.ingredients = ingredients;
       }
     );
@@ -110,10 +110,10 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   initializeData(){
     this.shoppingListService.getShoppingList().subscribe(
       ingredients => {
-        console.log("Ingredients received:", ingredients);
         this.ingredients = ingredients;
         this.isListConflictModalOpen = false;
         this.unsavedChangesStatus = this.shoppingListService.getHasUnsavedChanges();
+        this.loading = false;
       },
       error => {
         console.log("getShoppingList error:", error);

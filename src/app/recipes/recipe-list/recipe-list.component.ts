@@ -19,6 +19,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   recipeSubscription: Subscription;
   newRecipeModalConfig: ConfirmationModalConfig;
   isNewRecipeModalOpen: boolean;
+  public loading: boolean;
 
 
   constructor(
@@ -29,6 +30,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
+    this.loading = true;
 
     this.isNewRecipeModalOpen = false;
     this.newRecipeModalConfig = {
@@ -67,6 +69,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
           recipes[id].id = id; //Adding an id property to each recipe object
           this.recipes.push(recipes[id]);
         }
+        this.loading = false;
       }
     );
   }

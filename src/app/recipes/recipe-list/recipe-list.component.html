@@ -1,6 +1,8 @@
 <a class="waves-effect waves-light btn" (click)="onNewRecipeClick()">Add New Recipe</a>
 <p class="list-subtitle">Latest Recipes:</p>
-<div class="collection">
+
+<app-loader *ngIf="loading"></app-loader>
+<div class="collection" *ngIf="!loading">
     <a app-recipe-item 
         *ngFor="let recipeElement of recipes" 
         [recipe]="recipeElement" 
