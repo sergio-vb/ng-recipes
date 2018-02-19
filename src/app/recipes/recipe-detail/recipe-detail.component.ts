@@ -23,6 +23,8 @@ export class RecipeDetailComponent implements OnInit {
   userOwnsRecipe: boolean;
   isDeleteModalOpen: boolean;
   deleteModalConfig: ConfirmationModalConfig;
+  public loadingDetails: boolean;
+  public loadingIngredients: boolean;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -32,6 +34,9 @@ export class RecipeDetailComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+
+    this.loadingDetails = true;
+    this.loadingIngredients = true;
 
     this.isDeleteModalOpen = false;
     this.deleteModalConfig = {
@@ -61,7 +66,8 @@ export class RecipeDetailComponent implements OnInit {
           if (this.recipe === null){
             this.router.navigate(["/recipes"]);
           }else{
-            
+            this.loadingDetails = false;
+
             //Gets recipe ingredients
             const ingredientsResponse = await this.recipeService.getRecipeIngredients(this.id).toPromise();
             // this.ingredients = [];
@@ -69,6 +75,7 @@ export class RecipeDetailComponent implements OnInit {
             //   this.ingredients.push(ingredientsResponse[id]);
             // }
             this.ingredients = ingredientsResponse;
+            this.loadingIngredients = false;
 
             //Sets option to enable Edit and Delete if user is owner
             this.userOwnsRecipe = await this.recipeService.doesRecipeBelongToUser(this.id, this.recipe).toPromise(); //Only interested in first value, not on-going subscription
