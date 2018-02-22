@@ -19,6 +19,8 @@ export class RecipeEditComponent implements OnInit {
   recipeForm: FormGroup;
   public loadingDetails: boolean;
   public loadingIngredients: boolean;
+  public uploadedImageBase64: any;
+  private uploadedImageFile: File;
 
   constructor(
     private activatedRoute: ActivatedRoute,
@@ -122,36 +124,44 @@ export class RecipeEditComponent implements OnInit {
     const formValues = this.recipeForm.value;
     const { userId } = await this.authService.getLatestAuthState().toPromise(); //Only interested in first value, not on-going subscription
     
-    const recipe = new Recipe(
-      userId,
-      formValues.name, 
-      this.recipeService.slugify(formValues.name),
-      formValues.description, 
-      formValues.preparation,
-      formValues.imagePath
-    );
+    /*
+    Use the recipeService to upload the image to firebase storage, returning the image url
+    Use the newly-acquired url to save the recipe as usual
+    */
 
-    //Converts array to normalized object
-    const ingredients = formValues.ingredients.reduce((obj, current) => {
-      obj[current.name] = current;
-      return obj;
-    }, {});
+    console.log("File to be uploaded:", this.uploadedImageFile);
+    const imageUrl = this.recipeService.uploadImage(this.uploadedImageFile);
 
-    if (this.editMode){
-      this.recipeService.updateRecipe(this.id, recipe, ingredients).subscribe(
-        response => {
-          console.log("Update recipe response:", response);
-          this.router.navigate(['../'], {relativeTo: this.activatedRoute});
-        }
-      );
-    }else{
-      this.recipeService.addRecipe(recipe, ingredients).subscribe( 
-        response => {
-          console.log("Add recipe response:", response);
-          this.router.navigate(['../'], {relativeTo: this.activatedRoute});
-        }
-      );
-    }    
+    // const recipe = new Recipe(
+    //   userId,
+    //   formValues.name, 
+    //   this.recipeService.slugify(formValues.name),
+    //   formValues.description, 
+    //   formValues.preparation,
+    //   formValues.imagePath
+    // );
+
+    // //Converts array to normalized object
+    // const ingredients = formValues.ingredients.reduce((obj, current) => {
+    //   obj[current.name] = current;
+    //   return obj;
+    // }, {});
+
+    // if (this.editMode){
+    //   this.recipeService.updateRecipe(this.id, recipe, ingredients).subscribe(
+    //     response => {
+    //       console.log("Update recipe response:", response);
+    //       this.router.navigate(['../'], {relativeTo: this.activatedRoute});
+    //     }
+    //   );
+    // }else{
+    //   this.recipeService.addRecipe(recipe, ingredients).subscribe( 
+    //     response => {
+    //       console.log("Add recipe response:", response);
+    //       this.router.navigate(['../'], {relativeTo: this.activatedRoute});
+    //     }
+    //   );
+    // }  
   }
 
   onCancel(){
@@ -161,5 +171,41 @@ export class RecipeEditComponent implements OnInit {
   onDeleteIngredient(index:number){
     (<FormArray>this.recipeForm.get('ingredients')).removeAt(index);
   }
+
+  handleFileSelect(evt){
+    console.log("Image Event:", evt);
+    const files = evt.target.files;
+    
+    if (files && files.length) {
+      console.log("File:", files[0]);
+      this.uploadedImageFile = files[0];
+
+      //Loads the image into an <img> tag to display a preview to the user:
+      const reader = new FileReader();
+      reader.onload = function(){
+        this.uploadedImageBase64 = reader.result;
+      }.bind(this);
+      reader.readAsDataURL(files[0]);
+    }
+  }
+
+  /*
+  handleFileSelect(evt): void {
+    const files = evt.target.files;
+    const file = files[0];
+
+    if (files && file) {
+      const reader = new FileReader();
+      reader.onload = this._handleReaderLoaded.bind(this);
+      reader.readAsBinaryString(file);
+    }
+  }
+
+  _handleReaderLoaded(readerEvt): void {
+    const binaryString = readerEvt.target.result;
+    this.img.nativeElement.src = BASE64 + btoa(binaryString);
+    this.user.avatar = this.img.nativeElement.src;
+  }
+  */
   
 }

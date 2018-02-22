@@ -2,6 +2,7 @@ import { Subject } from 'rxjs/Subject';
 import { HttpClient, HttpParams, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import 'rxjs';
+import * as firebase from 'firebase';
 
 import { Recipe } from './recipe.model';
 import { Ingredient } from '../shared/ingredient.model';
@@ -114,6 +115,26 @@ export class RecipeService {
     return this.authService.getLatestAuthState().map( 
       authState => (!!recipe.ownerId && (recipe.ownerId === authState.userId))
     );
+  }
+
+  uploadImage(imageFile: File){
+    console.log("Service received file:", imageFile);
+
+    // Get a reference to the storage service, which is used to create references in your storage bucket
+    const storage = firebase.storage();
+
+    // Create a storage reference from our storage service
+    const storageRef = storage.ref();
+
+    // Create a child reference
+    const imagesRef = storageRef.child('recipeImages');
+    
+    imagesRef.put(imageFile).then(function(snapshot) {
+      console.log('Uploaded a blob or file! Snapshot:', snapshot);
+    });
+
+
+    return "test";
   }
 
 }
